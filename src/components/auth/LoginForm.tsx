@@ -14,8 +14,8 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({ formData, onInputChange, onLogin }) => {
   return (
     <div className="flex-1 flex items-center justify-center p-8">
-      <div className="w-[360px]">
-        <h1 className="text-2xl font-bold mb-8">로그인</h1>
+      <div className="w-auto min-w-[280px]">
+        <h1 className="text-4xl font-bold mb-8">로그인</h1>
         <form className="space-y-6">
           <div className="space-y-4">
             <input

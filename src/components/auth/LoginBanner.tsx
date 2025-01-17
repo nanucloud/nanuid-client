@@ -2,7 +2,7 @@ import React from 'react';
 
 const LoginBanner = () => {
   return (
-    <div className="w-[600px] relative bg-cover bg-center hidden sm:block" style={{
+    <div className="w-[600px] relative bg-cover bg-center hidden md:block" style={{
       backgroundImage: `url('https://nanu.cc/NANU-Brand-Loader.jpg')`
     }}>
       <div className="absolute top-10 left-10">

@@ -1,26 +1,20 @@
+@import url('https://fastly.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Paperlogy-8Regular';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8Regular.woff2') format('woff2');
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Paperlogy-8ExtraBold';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');
-  font-weight: 800;
+  font-family: 'Freesentation-9Black';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2') format('woff2');
+  font-weight: 900;
   font-style: normal;
 }
 
 * {
-  font-family: 'Paperlogy-8Regular';
-  font-weight: 300;
+  font-family: 'Wanted Sans', sans-serif;
 }
 
 .font-bold {
-  font-family: 'Paperlogy-8ExtraBold';
+  font-family: 'Freesentation-9Black';
 }
