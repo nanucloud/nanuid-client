@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
 import VirtualKeypad from "./VirtualKeypad";
+import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
+import "react-toastify/dist/ReactToastify.css"; // Import styles for toast notifications
 
 interface RegisterFormProps {
   formData: {
@@ -31,6 +33,16 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     "pin"
   );
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      if (step < 6) {
+        handleNavigation(step + 1, "next");
+      } else {
+        onRegister();
+      }
+    }
+  };
+
   const handlePinKeyPress = (key: string) => {
     const currentValue = formData[currentPinField];
     if (currentValue.length < 6) {
@@ -49,19 +61,87 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     onPinChange(currentPinField, "");
   };
 
-  const handleNavigation = (nextStep: number, dir: "next" | "prev") => {
+  const validateForm = () => {
+    switch (step) {
+      case 1:
+        if (!formData.email) {
+          toast.error("이메일을 입력해주세요.");
+          return false;
+        }
+        if (!/\S+@\S+\.\S+/.test(formData.email)) {
+          toast.error("유효한 이메일 주소를 입력해주세요.");
+          return false;
+        }
+        break;
+      case 2:
+        if (!formData.name) {
+          toast.error("이름을 입력해주세요.");
+          return false;
+        }
+        break;
+      case 3:
+        if (!formData.birthDate) {
+          toast.error("생년월일을 입력해주세요.");
+          return false;
+        }
+        break;
+      case 4:
+        if (!formData.password || !formData.confirmPassword) {
+          toast.error("비밀번호와 비밀번호 확인을 입력해주세요.");
+          return false;
+        }
+        if (formData.password !== formData.confirmPassword) {
+          toast.error("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+          return false;
+        }
+        if (formData.password.length < 8) {
+          toast.error("비밀번호는 8자 이상이어야 합니다.");
+          return false;
+        }
+        break;
+      case 5:
+        if (!formData.pin) {
+          toast.error("PIN 번호를 입력해주세요.");
+          return false;
+        }
+        break;
+      case 6:
+        if (!formData.termsAccepted) {
+          toast.error("이용 약관에 동의해야 합니다.");
+          return false;
+        }
+        break;
+      default:
+        break;
+    }
+    return true;
+  };
+
+  const handlePrevStep = () => {
+    if (step > 1) {
+      handleNavigation(step - 1, "prev", true);
+    }
+  };
+
+  const handleNavigation = (
+    nextStep: number,
+    dir: "next" | "prev",
+    bypassValidate?: boolean
+  ) => {
+    if (!bypassValidate && !validateForm()) return;
+
     setDirection(dir);
     const container = containerRef.current;
     if (container) {
       container.classList.add("transition-transform", "duration-300");
       container.style.transform =
-        dir === "next" ? "translateX(-100%)" : "translateX(100%)";
+        dir === "next" ? "translateX(-50%)" : "translateX(50%)";
 
       setTimeout(() => {
         setStep(nextStep);
         container.classList.remove("transition-transform");
         container.style.transform =
-          dir === "next" ? "translateX(100%)" : "translateX(-100%)";
+          dir === "next" ? "translateX(50%)" : "translateX(-50%)";
 
         requestAnimationFrame(() => {
           container.classList.add("transition-transform");
@@ -79,6 +159,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           "NANU ID에 사용할 이메일을 입력해 주세요.\n한 번 입력 후 변경이 어려워요.",
         input: (
           <input
+            required
             type="email"
             name="email"
             placeholder="이메일을 입력해 주세요"
@@ -90,13 +171,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
       },
       2: {
         title: "👤 이름이 어떻게 되시나요?",
-        subtitle: "실명을 입력해 주세요.\n추후 금융 서비스에 필요해요.",
+        subtitle: "서비스 이용을 위해 필요한 정보입니다.",
         input: (
           <input
             type="text"
             name="name"
             placeholder="이름을 알려주세요"
-            className="w-full px-0 py-2 border-b border-gray-300 focusㄴㄴ:border-blue-500 focus:outline-none transition-colors"
+            className="w-full px-0 py-2 border-b border-gray-300 focus:border-blue-500 focus:outline-none transition-colors"
             value={formData.name}
             onChange={onInputChange}
           />
@@ -231,7 +312,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           {step > 1 && (
             <button
               type="button"
-              onClick={() => handleNavigation(step - 1, "prev")}
+              onClick={handlePrevStep}
               className="flex-1 border border-blue-600 text-blue-600 py-3 rounded hover:bg-blue-50 transition-colors"
             >
               이전
@@ -253,7 +334,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   };
 
   return (
-    <div className="relative flex-1 flex items-center justify-center p-6">
+    <div
+      className="relative flex-1 flex items-center justify-center p-6"
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+    >
       <div className="w-[310px]">
         <h1 className="text-4xl font-bold mb-8">회원가입</h1>
         <div
@@ -271,6 +356,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           </div>
         )}
       </div>
+      <ToastContainer /> {/* Add the ToastContainer for toast notifications */}
     </div>
   );
 };
