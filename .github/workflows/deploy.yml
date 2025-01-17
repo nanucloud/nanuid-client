@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    environment: DEPLOY_ACTION
+    environment: CLIENT_DEPLOY
 
     steps:
     - name: node checkout
