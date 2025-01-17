@@ -11,3 +11,14 @@ export interface AuthResponse {
     email: string;
   };
 }
+
+export interface RegisterFormData {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  name: string;
+  birthDate: string;
+  pin: string;
+  confirmPin: string;
+  termsAccepted: boolean;
+}
