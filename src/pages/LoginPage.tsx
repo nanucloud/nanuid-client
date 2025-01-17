@@ -3,12 +3,7 @@ import { useNavigate } from "react-router-dom";
 import LoginContainer from "../components/auth/LoginContainer";
 import LoginBanner from "../components/auth/LoginBanner";
 import LoginForm from "../components/auth/LoginForm";
-
-interface LoginFormData {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-}
+import { LoginFormData } from "../types/Auth";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState<LoginFormData>({
