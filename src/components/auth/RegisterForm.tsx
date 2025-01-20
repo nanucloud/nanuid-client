@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import VirtualKeypad from "./VirtualKeypad";
-import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
-import "react-toastify/dist/ReactToastify.css"; // Import styles for toast notifications
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
 
 interface RegisterFormProps {
   formData: {
@@ -17,6 +18,7 @@ interface RegisterFormProps {
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onPinChange: (name: string, value: string) => void;
   onRegister: () => void;
+  isMobile?: boolean;
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = ({
@@ -24,14 +26,37 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   onInputChange,
   onPinChange,
   onRegister,
+  isMobile = false,
 }) => {
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState<"next" | "prev">("next");
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isPinInput, setIsPinInput] = useState(false);
   const [currentPinField, setCurrentPinField] = useState<"pin" | "confirmPin">(
     "pin"
   );
+
+  const mobileStyles = {
+    wrapper: "min-h-screen bg-white flex flex-col", // flexbox를 이용해 세로 정렬
+    container: "flex flex-col p-4 pt-6", // 세로 방향으로 아이템 배치
+    title: "text-3xl font-bold mb-6",
+    inputBase:
+      "w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none",
+    button: "w-full py-4 rounded-lg font-medium",
+    pinContainer: "mt-8",
+    pinBox: "w-12 h-12 border-2 rounded-lg",
+  };
+
+  const desktopStyles = {
+    container: "relative flex-1 flex items-center justify-center p-6",
+    title: "text-4xl font-bold mb-8",
+    inputBase:
+      "w-full px-0 py-2 border-b border-gray-300 focus:border-blue-500 focus:outline-none",
+    button: "flex-1 py-3 rounded",
+    pinContainer: "space-y-4",
+    pinBox: "w-10 h-10 border-b-2",
+  };
+
+  const styles = isMobile ? mobileStyles : desktopStyles;
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -130,24 +155,28 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   ) => {
     if (!bypassValidate && !validateForm()) return;
 
-    setDirection(dir);
-    const container = containerRef.current;
-    if (container) {
-      container.classList.add("transition-transform", "duration-300");
-      container.style.transform =
-        dir === "next" ? "translateX(-50%)" : "translateX(50%)";
-
-      setTimeout(() => {
-        setStep(nextStep);
-        container.classList.remove("transition-transform");
+    if (isMobile) {
+      setStep(nextStep);
+    } else {
+      setDirection(dir);
+      const container = containerRef.current;
+      if (container) {
+        container.classList.add("transition-transform", "duration-300");
         container.style.transform =
-          dir === "next" ? "translateX(50%)" : "translateX(-50%)";
+          dir === "next" ? "translateX(-50%)" : "translateX(50%)";
 
-        requestAnimationFrame(() => {
-          container.classList.add("transition-transform");
-          container.style.transform = "translateX(0)";
-        });
-      }, 300);
+        setTimeout(() => {
+          setStep(nextStep);
+          container.classList.remove("transition-transform");
+          container.style.transform =
+            dir === "next" ? "translateX(50%)" : "translateX(-50%)";
+
+          requestAnimationFrame(() => {
+            container.classList.add("transition-transform");
+            container.style.transform = "translateX(0)";
+          });
+        }, 300);
+      }
     }
   };
 
@@ -302,18 +331,26 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     return (
       <div className="space-y-6">
         <div className="space-y-2">
-          <h2 className="text-xl font-medium">{currentStep.title}</h2>
+          <h2
+            className={isMobile ? "text-xl font-medium" : "text-xl font-medium"}
+          >
+            {currentStep.title}
+          </h2>
           <p className="text-gray-600 whitespace-pre-line">
             {currentStep.subtitle}
           </p>
         </div>
         {currentStep.input}
-        <div className="flex space-x-3 pt-4">
+        <div
+          className={`flex ${
+            isMobile ? "flex-col space-y-3" : "space-x-3"
+          } pt-4`}
+        >
           {step > 1 && (
             <button
               type="button"
-              onClick={handlePrevStep}
-              className="flex-1 border border-blue-600 text-blue-600 py-3 rounded hover:bg-blue-50 transition-colors"
+              onClick={() => handleNavigation(step - 1, "prev", true)}
+              className={`${styles.button} border border-blue-600 text-blue-600 hover:bg-blue-50`}
             >
               이전
             </button>
@@ -324,7 +361,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               if (step === 6) onRegister();
               else handleNavigation(step + 1, "next");
             }}
-            className="flex-1 bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition-colors"
+            className={`${styles.button} bg-blue-600 text-white hover:bg-blue-700`}
           >
             {step === 6 ? "회원가입" : "다음"}
           </button>
@@ -334,29 +371,34 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   };
 
   return (
-    <div
-      className="relative flex-1 flex items-center justify-center p-6"
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-    >
-      <div className="w-[310px]">
-        <h1 className="text-4xl font-bold mb-8">회원가입</h1>
+    <div className={styles.container} onKeyDown={handleKeyDown} tabIndex={0}>
+      <div className={isMobile ? "w-full" : "w-[310px]"}>
+        <h1 className={styles.title}>회원가입</h1>
         <div
           ref={containerRef}
-          className="transform transition-transform duration-300"
+          className={`transform ${
+            !isMobile ? "transition-transform duration-300" : ""
+          }`}
         >
           {renderStep()}
         </div>
         {step !== 5 && (
-          <div className="absolute bottom-8 left-0 right-0 text-center text-sm text-gray-600">
+          <div
+            className={`${
+              isMobile ? "mt-8" : "absolute bottom-10 left-0 right-0"
+            } text-center text-sm text-gray-600`}
+          >
             이미 계정이 있으신가요?{" "}
-            <a href="/login" className="text-blue-600 hover:underline">
+            <Link
+              to={isMobile ? "/app/login" : "/login"}
+              className="text-blue-600 hover:underline"
+            >
               로그인
-            </a>
+            </Link>
           </div>
         )}
       </div>
-      <ToastContainer /> {/* Add the ToastContainer for toast notifications */}
+      <ToastContainer />
     </div>
   );
 };

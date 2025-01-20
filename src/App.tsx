@@ -4,6 +4,8 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import MobileLoginPage from "./pages/mobile/MobileLoginPage";
+import MobileRegisterPage from "./pages/mobile/MobileRegisterPage";
 
 const App = () => {
   return (
@@ -18,6 +20,8 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/app/login" element={<MobileLoginPage />} />
+        <Route path="/app/register" element={<MobileRegisterPage />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
