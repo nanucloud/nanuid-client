@@ -30,6 +30,16 @@ const LoginForm: React.FC<LoginFormProps> = ({
   setIsPinModalOpen,
   onCaptchaChange,
 }) => {
+  const isEmailValid = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(
+    formData.email
+  );
+  const isPasswordValid = formData.password.length >= 8;
+  const isFormValid =
+    isEmailValid &&
+    isPasswordValid &&
+    formData.email !== "" &&
+    formData.password !== "";
+
   return (
     <div className="flex-1 flex items-center justify-center p-6">
       <div className="w-auto min-w-[280px]">
@@ -94,7 +104,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
               type="button"
               onClick={onAppLogin}
               className="w-[48%] bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition-colors disabled:bg-blue-300"
-              disabled={isLoading}
+              disabled={isLoading || !isFormValid}
             >
               {isLoading ? "처리중..." : "APP 간편인증 로그인"}
             </button>
@@ -104,7 +114,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
                 setIsPinModalOpen(true);
               }}
               className="w-[48%] bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition-colors disabled:bg-blue-300"
-              disabled={isLoading}
+              disabled={isLoading || !isFormValid}
             >
               {isLoading ? "처리중..." : "PIN 인증 로그인"}
             </button>
