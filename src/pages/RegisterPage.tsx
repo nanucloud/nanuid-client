@@ -43,7 +43,7 @@ const RegisterPage = () => {
         name: formData.name,
         birthDate: formData.birthDate,
         pin: formData.pin,
-        redirectUrl: "/home",
+        redirectUrl: "/login",
       });
     } catch (error) {
       toast.error("회원가입에 실패했습니다.");

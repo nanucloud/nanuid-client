@@ -5,6 +5,8 @@ import LoginBanner from "../../components/auth/LoginBanner";
 import RegisterForm from "../../components/auth/RegisterForm";
 import { RegisterFormData } from "../../types/Auth";
 import MobileContainer from "../../components/mobile/MobileContainer";
+import { RegisterService } from "../../services/RegisterService";
+import { toast } from "react-toastify";
 
 const MobileRegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -34,8 +36,19 @@ const MobileRegisterPage = () => {
     }));
   };
 
-  const handleRegister = () => {
-    console.log("Register:", formData);
+  const handleRegister = async () => {
+    try {
+      await RegisterService.register({
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+        birthDate: formData.birthDate,
+        pin: formData.pin,
+        redirectUrl: "/app/login",
+      });
+    } catch (error) {
+      toast.error("회원가입에 실패했습니다.");
+    }
   };
 
   return (
