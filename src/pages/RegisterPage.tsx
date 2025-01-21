@@ -4,43 +4,56 @@ import LoginContainer from "../components/auth/LoginContainer";
 import LoginBanner from "../components/auth/LoginBanner";
 import RegisterForm from "../components/auth/RegisterForm";
 import { RegisterFormData } from "../types/Auth";
+import { RegisterService } from "../services/RegisterService";
+import { toast } from "react-toastify";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    name: '',
-    birthDate: '',
-    pin: '',
-    confirmPin: '',
-    termsAccepted: false
+    email: "",
+    password: "",
+    confirmPassword: "",
+    name: "",
+    birthDate: "",
+    pin: "",
+    confirmPin: "",
+    termsAccepted: false,
   });
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handlePinChange = (name: string, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleRegister = () => {
-    console.log('Register:', formData);
+  const handleRegister = async () => {
+    try {
+      await RegisterService.register({
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+        birthDate: formData.birthDate,
+        pin: formData.pin,
+        redirectUrl: "/home",
+      });
+    } catch (error) {
+      toast.error("회원가입에 실패했습니다.");
+    }
   };
 
   return (
     <LoginContainer>
       <LoginBanner />
-      <RegisterForm 
+      <RegisterForm
         formData={formData}
         onInputChange={handleInputChange}
         onPinChange={handlePinChange}

@@ -19,6 +19,7 @@ interface RegisterFormProps {
   onPinChange: (name: string, value: string) => void;
   onRegister: () => void;
   isMobile?: boolean;
+  redirectUrl?: string;
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = ({
@@ -373,7 +374,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   return (
     <div className={styles.container} onKeyDown={handleKeyDown} tabIndex={0}>
       <div className={isMobile ? "w-full" : "w-[310px]"}>
-        <h1 className={styles.title}>회원가입</h1>
+        <h1 className={styles.title}>
+          회원가입
+        </h1>
         <div
           ref={containerRef}
           className={`transform ${

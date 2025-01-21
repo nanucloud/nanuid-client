@@ -6,18 +6,24 @@ interface PinAuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (pin: string, captchaToken: string) => void;
+  onCaptchaChange: (newToken: string) => void; // 추가된 부분
 }
 
-const PinAuthModal: React.FC<PinAuthModalProps> = ({ isOpen, onClose, onSubmit }) => {
+const PinAuthModal: React.FC<PinAuthModalProps> = ({ isOpen, onClose, onSubmit, onCaptchaChange }) => {
   const [step, setStep] = useState<'captcha' | 'pin'>('captcha');
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-  const [pin, setPin] = useState<string>('');
+  const [pin, setPin] = useState<string>('');  
+  const [captchaExpired, setCaptchaExpired] = useState<boolean>(false);
 
   const handleRecaptchaChange = (token: string | null) => {
-    setRecaptchaToken(token);
     if (token) {
-      console.log(token) // PostMan 로그인용 출력
+      setRecaptchaToken(token);
+      onCaptchaChange(token);  // 부모 컴포넌트로 토큰 전달
       setStep('pin');
+      setCaptchaExpired(false);
+    } else {
+      setRecaptchaToken(null);
+      setCaptchaExpired(true);
     }
   };
 
@@ -61,8 +67,14 @@ const PinAuthModal: React.FC<PinAuthModalProps> = ({ isOpen, onClose, onSubmit }
               <ReCAPTCHA
                 sitekey="6LdSu74qAAAAAKFs8haQHu4HO9y_QLeXzvsYdUWV"
                 onChange={handleRecaptchaChange}
+                onExpired={() => setCaptchaExpired(true)}
               />
             </div>
+            {captchaExpired && (
+              <div className="text-red-500 text-sm text-center mt-4">
+                리캡챠 인증이 만료되었습니다. 다시 인증을 진행해주세요.
+              </div>
+            )}
             <button
               onClick={onClose}
               className="w-full py-3 text-gray-500 hover:text-gray-700"
@@ -103,7 +115,7 @@ const PinAuthModal: React.FC<PinAuthModalProps> = ({ isOpen, onClose, onSubmit }
               </button>
               <button
                 onClick={handleSubmit}
-                disabled={pin.length !== 6}
+                disabled={pin.length !== 6 || !recaptchaToken}
                 className="w-1/2 py-3 bg-blue-600 text-white rounded-lg disabled:bg-blue-300"
               >
                 확인

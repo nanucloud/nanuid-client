@@ -20,6 +20,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ formData, onInputChange }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isPinModalOpen, setIsPinModalOpen] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null); // 리캡챠 토큰 상태 추가
 
   const handleAppLogin = async () => {
     try {
@@ -63,6 +64,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ formData, onInputChange }) => {
         redirectUrl: "/home",
       };
 
+      if (!captchaToken) {
+        toast.error("리캡챠 만료되었습니다. 다시 시도해주세요.");
+        return;
+      }
+
       await AuthService.execute(loginData);
       toast.success("로그인 성공!");
     } catch (err) {
@@ -73,6 +79,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ formData, onInputChange }) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleCaptchaTokenChange = (newToken: string) => {
+    setCaptchaToken(newToken);
   };
 
   return (
@@ -168,6 +178,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ formData, onInputChange }) => {
           isOpen={isPinModalOpen}
           onClose={() => setIsPinModalOpen(false)}
           onSubmit={(pin, captchaToken) => handlePinSubmit(pin, captchaToken)}
+          onCaptchaChange={handleCaptchaTokenChange} // 리캡챠 토큰 변경시 호출
         />
       </div>
     </div>
