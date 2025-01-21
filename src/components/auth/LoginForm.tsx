@@ -14,6 +14,7 @@ interface LoginFormProps {
     rememberMe: boolean;
   };
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onLogin: (type: "app" | "pin") => void; 
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ formData, onInputChange }) => {
