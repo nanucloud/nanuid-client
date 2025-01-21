@@ -6,7 +6,7 @@ export function loginRequestViaPin(data: LoginRequest): any {
     email: data.email,
     password: data.password,
     recaptchaToken: data.recaptchaToken,
-    pin: data.password,
+    pin: data.pin,
     deviceType: getDeviceType(),
   };
 }
