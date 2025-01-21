@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import VirtualKeypad from "./VirtualKeypad";
 
@@ -17,8 +17,16 @@ const PinAuthModal: React.FC<PinAuthModalProps> = ({
 }) => {
   const [step, setStep] = useState<"captcha" | "pin">("captcha");
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-  const [pin, setPin] = useState<string>("");
+  const [pin, setPin] = useState<string>(""); 
   const [captchaExpired, setCaptchaExpired] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setStep("captcha");
+      setPin("");
+      setCaptchaExpired(false); 
+    }
+  }, [isOpen]);
 
   const handleRecaptchaChange = (token: string | null) => {
     if (token) {
@@ -49,9 +57,16 @@ const PinAuthModal: React.FC<PinAuthModalProps> = ({
   const handleSubmit = () => {
     if (pin.length === 6 && recaptchaToken) {
       onSubmit(pin, recaptchaToken);
-      setPin("");
-      onClose();
+      setPin(""); 
+      onClose(); 
     }
+  };
+
+  const handleModalClose = () => {
+    setStep("captcha");
+    setPin("");
+    setCaptchaExpired(false);
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -82,7 +97,7 @@ const PinAuthModal: React.FC<PinAuthModalProps> = ({
               </div>
             )}
             <button
-              onClick={onClose}
+              onClick={handleModalClose}
               className="w-full py-3 text-gray-500 hover:text-gray-700"
             >
               닫기
@@ -118,7 +133,7 @@ const PinAuthModal: React.FC<PinAuthModalProps> = ({
 
             <div className="flex space-x-2 mt-4">
               <button
-                onClick={onClose}
+                onClick={handleModalClose}
                 className="w-1/2 py-3 text-gray-500 hover:text-gray-700"
               >
                 취소
