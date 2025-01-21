@@ -16,6 +16,7 @@ const PinAuthModal: React.FC<PinAuthModalProps> = ({ isOpen, onClose, onSubmit }
   const handleRecaptchaChange = (token: string | null) => {
     setRecaptchaToken(token);
     if (token) {
+      console.log(token) // PostMan 로그인용 출력
       setStep('pin');
     }
   };
