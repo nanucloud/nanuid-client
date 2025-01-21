@@ -13,10 +13,14 @@ export class AuthService {
   static async execute(data: LoginRequest): Promise<void> {
     let endpoint = "";
 
-    if (data.requestType === RequestType.DASHBOARD) {
+    if (data.requestType === RequestType.DASHBOARD &&data.authType === AuthType.APP) {
+      endpoint = `${BASE_URL}/auth/app-login`;
+    } else if (data.requestType === RequestType.DASHBOARD && data.authType === AuthType.PIN) {
       endpoint = `${BASE_URL}/auth/login`;
+    } else if (data.requestType === RequestType.OAUTH &&data.authType === AuthType.APP) {
+      endpoint = `${BASE_URL}/oauth/app-login`;
     } else {
-      endpoint = `${BASE_URL}/auth/oauth_login`;
+      endpoint = `${BASE_URL}/oauth/login`;
     }
 
     console.log(endpoint);
@@ -30,6 +34,7 @@ export class AuthService {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(requestBody),
+      mode: 'cors',
     });
 
     const result = await response.json();
