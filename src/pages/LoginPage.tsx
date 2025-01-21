@@ -42,14 +42,16 @@ const LoginPage = () => {
         rememberMe: formData.rememberMe,
         authType: AuthType.APP,
         requestType: RequestType.DASHBOARD,
-        redirectUrl: "/home",
+        redirectUrl: "/app/home",
       };
 
       await AuthService.execute(loginData);
       toast.success("로그인 성공!");
       navigate("/home");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "로그인 중 오류가 발생했습니다.");
+      setError(
+        err instanceof Error ? err.message : "로그인 중 오류가 발생했습니다."
+      );
       toast.error("로그인 실패! 다시 시도해주세요.");
     } finally {
       setIsLoading(false);
@@ -73,7 +75,7 @@ const LoginPage = () => {
       };
 
       if (!captchaToken) {
-        toast.error("리캡챠 만료되었습니다. 다시 시도해주세요.");
+        toast.error("리캡챠가 만료되었습니다. 다시 시도해주세요.");
         return;
       }
 
@@ -81,7 +83,9 @@ const LoginPage = () => {
       toast.success("로그인 성공!");
       navigate("/home");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "로그인 중 오류가 발생했습니다.");
+      setError(
+        err instanceof Error ? err.message : "로그인 중 오류가 발생했습니다."
+      );
       toast.error("로그인 실패! 다시 시도해주세요.");
     } finally {
       setIsLoading(false);

@@ -10,8 +10,8 @@ interface LoginFormProps {
     rememberMe: boolean;
   };
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onAppLogin: () => void;
-  onPinSubmit: (pin: string, captchaToken: string) => void;
+  onAppLogin: () => void; // APP 간편인증 로그인 함수
+  onPinSubmit: (pin: string, captchaToken: string) => void; // PIN 인증 로그인 함수
   isLoading: boolean;
   error: string | null;
   isPinModalOpen: boolean;
@@ -92,7 +92,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           <div className="flex justify-between space-x-3 pt-4">
             <button
               type="button"
-              onClick={onAppLogin}
+              onClick={onAppLogin} // 여기에서 APP 간편인증 로그인 호출
               className="w-[48%] bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition-colors disabled:bg-blue-300"
               disabled={isLoading}
             >
@@ -100,7 +100,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => setIsPinModalOpen(true)}
+              onClick={() => setIsPinModalOpen(true)} // PIN 인증 로그인 모달 여는 버튼
               className="w-[48%] bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition-colors disabled:bg-blue-300"
               disabled={isLoading}
             >
@@ -122,7 +122,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <PinAuthModal
           isOpen={isPinModalOpen}
           onClose={() => setIsPinModalOpen(false)}
-          onSubmit={onPinSubmit}
+          onSubmit={onPinSubmit} // PIN 인증 처리
           onCaptchaChange={onCaptchaChange} // 리캡챠 토큰 변경시 호출
         />
       </div>
