@@ -26,17 +26,15 @@ const VirtualKeypad: React.FC<VirtualKeypadProps> = ({
     "0",
   ];
 
-  // Fisher-Yates Shuffle 알고리즘을 사용하여 숫자들만 랜덤 섞기
   useEffect(() => {
     const shuffled = [...numbers];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // swap
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; 
     }
     setShuffledNumbers(shuffled);
-  }, []); // 컴포넌트가 처음 렌더링될 때 한 번만 실행
+  }, []); 
 
-  // 최종 배열에 숫자와 clear, delete 버튼 추가
   const finalKeys = [...shuffledNumbers, "clear", "delete"];
 
   return (

@@ -1,6 +1,7 @@
 import React from "react";
 import MobileContainer from "../../components/mobile/MobileContainer";
 import { Link } from "react-router-dom";
+import PinAuthModal from "../../components/auth/PinAuthModal";
 
 const MobileLoginPage = () => {
   const [formData, setFormData] = React.useState({
@@ -8,6 +9,8 @@ const MobileLoginPage = () => {
     password: "",
     rememberMe: false,
   });
+
+  const [isPinModalOpen, setIsPinModalOpen] = React.useState(false);
 
   const handleInputChange = (e: {
     target: { name: any; value: any; type: any; checked: any };
@@ -21,6 +24,17 @@ const MobileLoginPage = () => {
 
   const handleLogin = (type: string) => {
     console.log(`Logging in with ${type}`, formData);
+    if (type === "pin") {
+      setIsPinModalOpen(true);
+    }
+  };
+
+  const handlePinSubmit = (pin: string, captchaToken: string) => {
+    setIsPinModalOpen(false);
+  };
+
+  const handleCaptchaChange = (newToken: string) => {
+    console.log("Captcha token changed:", newToken);
   };
 
   return (
@@ -56,24 +70,28 @@ const MobileLoginPage = () => {
           <div className="space-y-3 pt-4">
             <button
               type="button"
-              onClick={() => handleLogin("app")}
+              onClick={() => handleLogin("pin")}
               className="w-full bg-blue-600 text-white py-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
             >
-              서비스 로그인
+              PIN 인증 로그인
             </button>
           </div>
         </form>
 
         <div className="mt-8 text-center text-sm text-gray-600">
           계정이 없으신가요?{" "}
-          <Link
-            to="/app/register"
-            className="text-blue-600 hover:underline"
-          >
+          <Link to="/app/register" className="text-blue-600 hover:underline">
             NANU ID 생성하기
           </Link>
         </div>
       </div>
+
+      <PinAuthModal
+        isOpen={isPinModalOpen}
+        onClose={() => setIsPinModalOpen(false)}
+        onSubmit={handlePinSubmit}
+        onCaptchaChange={handleCaptchaChange}
+      />
     </MobileContainer>
   );
 };
