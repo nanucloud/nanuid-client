@@ -1,10 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AuthService } from "../../services/AuthService";
-import { RequestType } from "../../services/dto/request/RequestType";
-import { AuthType } from "../../services/dto/request/AuthType";
 import PinAuthModal from "./PinAuthModal";
 
 interface LoginFormProps {
@@ -14,77 +10,26 @@ interface LoginFormProps {
     rememberMe: boolean;
   };
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onAppLogin: () => void;
+  onPinSubmit: (pin: string, captchaToken: string) => void;
+  isLoading: boolean;
+  error: string | null;
+  isPinModalOpen: boolean;
+  setIsPinModalOpen: (value: boolean) => void;
+  onCaptchaChange: (newToken: string) => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ formData, onInputChange }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null); // 리캡챠 토큰 상태 추가
-
-  const handleAppLogin = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const loginData = {
-        email: formData.email,
-        password: formData.password,
-        rememberMe: formData.rememberMe,
-        authType: AuthType.APP,
-        requestType: RequestType.DASHBOARD,
-        redirectUrl: "/home",
-      };
-
-      await AuthService.execute(loginData);
-      toast.success("로그인 성공!");
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "로그인 중 오류가 발생했습니다."
-      );
-      toast.error("로그인 실패! 다시 시도해주세요.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handlePinSubmit = async (pin: string, captchaToken: string) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const loginData = {
-        email: formData.email,
-        password: formData.password,
-        rememberMe: formData.rememberMe,
-        pin,
-        recaptchaToken: captchaToken,
-        requestType: RequestType.DASHBOARD,
-        authType: AuthType.PIN,
-        redirectUrl: "/home",
-      };
-
-      if (!captchaToken) {
-        toast.error("리캡챠 만료되었습니다. 다시 시도해주세요.");
-        return;
-      }
-
-      await AuthService.execute(loginData);
-      toast.success("로그인 성공!");
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "로그인 중 오류가 발생했습니다."
-      );
-      toast.error("로그인 실패! 다시 시도해주세요.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCaptchaTokenChange = (newToken: string) => {
-    setCaptchaToken(newToken);
-  };
-
+const LoginForm: React.FC<LoginFormProps> = ({
+  formData,
+  onInputChange,
+  onAppLogin,
+  onPinSubmit,
+  isLoading,
+  error,
+  isPinModalOpen,
+  setIsPinModalOpen,
+  onCaptchaChange,
+}) => {
   return (
     <div className="flex-1 flex items-center justify-center p-6">
       <div className="w-auto min-w-[280px]">
@@ -147,7 +92,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ formData, onInputChange }) => {
           <div className="flex justify-between space-x-3 pt-4">
             <button
               type="button"
-              onClick={handleAppLogin}
+              onClick={onAppLogin}
               className="w-[48%] bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition-colors disabled:bg-blue-300"
               disabled={isLoading}
             >
@@ -177,8 +122,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ formData, onInputChange }) => {
         <PinAuthModal
           isOpen={isPinModalOpen}
           onClose={() => setIsPinModalOpen(false)}
-          onSubmit={(pin, captchaToken) => handlePinSubmit(pin, captchaToken)}
-          onCaptchaChange={handleCaptchaTokenChange} // 리캡챠 토큰 변경시 호출
+          onSubmit={onPinSubmit}
+          onCaptchaChange={onCaptchaChange} // 리캡챠 토큰 변경시 호출
         />
       </div>
     </div>
