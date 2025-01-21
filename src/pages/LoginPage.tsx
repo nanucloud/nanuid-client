@@ -22,18 +22,12 @@ const LoginPage = () => {
     }));
   };
 
-  const handleLogin = (type: "app" | "pin") => {
-    // TODO: Implement login logic
-    console.log(`Logging in with ${type}`, formData);
-  };
-
   return (
     <LoginContainer>
       <LoginBanner />
       <LoginForm
         formData={formData}
         onInputChange={handleInputChange}
-        onLogin={handleLogin}
       />
     </LoginContainer>
   );

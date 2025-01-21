@@ -12,13 +12,16 @@ const BASE_URL = SERVICE_API_URL.BASE_URL;
 export class AuthService {
   static async execute(data: LoginRequest): Promise<void> {
     let endpoint = "";
+
     if (data.requestType === RequestType.DASHBOARD) {
-      let endpoint = `${BASE_URL}/auth/login`;
+      endpoint = `${BASE_URL}/auth/login`;
     } else {
-      let endpoint = `${BASE_URL}/auth/oauth_login`;
+      endpoint = `${BASE_URL}/auth/oauth_login`;
     }
-    console.log(endpoint)
-    console.log(data)
+
+    console.log(endpoint);
+    console.log(data);
+
     const requestBody = this.getRequestDtoByAuthType(data);
 
     const response = await fetch(endpoint, {
