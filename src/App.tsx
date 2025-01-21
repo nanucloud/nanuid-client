@@ -6,6 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import MobileLoginPage from "./pages/mobile/MobileLoginPage";
 import MobileRegisterPage from "./pages/mobile/MobileRegisterPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import MobileProtectedRoute from "./components/MobileProtectedRoute";
 
 const App = () => {
   return (
@@ -18,11 +20,25 @@ const App = () => {
         rtl={false}
       />
       <Routes>
+        <Route path="/" element={
+            <ProtectedRoute>
+              <Navigate to="/home" replace />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+
+        <Route path="/app" element={
+            <MobileProtectedRoute>
+              <Navigate to="/app/home" replace />
+            </MobileProtectedRoute>
+          }
+        />
         <Route path="/app/login" element={<MobileLoginPage />} />
         <Route path="/app/register" element={<MobileRegisterPage />} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        
       </Routes>
     </BrowserRouter>
   );
