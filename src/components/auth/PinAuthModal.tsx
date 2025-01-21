@@ -58,7 +58,7 @@ const PinAuthModal: React.FC<PinAuthModalProps> = ({ isOpen, onClose, onSubmit }
             </div>
             <div className="flex justify-center">
               <ReCAPTCHA
-                sitekey="6Ldhc70qAAAAALY7G5IGduPm0gWmAaZuPJaI3WJb"
+                sitekey="6LdSu74qAAAAAKFs8haQHu4HO9y_QLeXzvsYdUWV"
                 onChange={handleRecaptchaChange}
               />
             </div>
