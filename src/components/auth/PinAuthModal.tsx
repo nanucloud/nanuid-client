@@ -32,6 +32,7 @@ const PinAuthModal: React.FC<PinAuthModalProps> = ({
     if (token) {
       setRecaptchaToken(token);
       onCaptchaChange(token);
+      console.log(token)
       setStep("pin");
       setCaptchaExpired(false);
     } else {
