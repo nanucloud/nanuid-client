@@ -4,13 +4,14 @@ import LoginHistoryItem from "../components/home/LoginHistoryItem";
 import Layout from "../components/home/HomeLayout";
 
 const HomePage: React.FC = () => (
-  <Layout>
+  <Layout username="Lee Donghyun" email="m*@*****n.cc">
     <div className="max-w-5xl mx-auto">
       <header className="mb-8">
-        <h2 className="text-5xl font-bold mb-1">반가워요</h2>
-        <h1 className="text-5xl font-bold">이동현 님</h1>
+        <h1 className="text-4xl font-bold">반갑습니다</h1>
+        <p className="text-gray-600 mt-2">Lee Donghyun 님의 나누아이디 사용을 환영합니다</p>
       </header>
 
+      <h1 className="text-xl font-primary mb-2">추천 설정</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <StatusCard title="NANU ID APP MFA" subtitle="앱이 연결되지 않음" />
         <StatusCard
@@ -18,12 +19,13 @@ const HomePage: React.FC = () => (
           subtitle="이메일이 인증되지 않음"
         />
         <StatusCard
-          title="비밀번호"
-          subtitle="이메일이 인증되지 않음"
+          title="계정 유출 여부"
+          subtitle="최근에 변경됨"
           active={false}
         />
       </div>
 
+      <h1 className="text-xl font-primary mb-2">최근 활동</h1>
       <div className="bg-white rounded-2xl p-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-medium">로그인 기록</h3>

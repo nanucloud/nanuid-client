@@ -3,11 +3,13 @@ import Sidebar from "./Sidebar";
 
 interface LayoutProps {
   children: ReactNode;
+  username: string;
+  email: string;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => (
+const Layout: React.FC<LayoutProps> = ({ children  , username , email} ) => (
   <div className="flex min-h-screen bg-gray-50">
-     <Sidebar name="이동현" email="m**@*******n.cc" />
+     <Sidebar name={username} email={email} />
     <main className="flex-1 p-4 md:p-6 max-w-5xl">{children}</main>
   </div>
 );

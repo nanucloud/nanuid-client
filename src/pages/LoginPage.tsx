@@ -18,7 +18,7 @@ const LoginPage = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null); // 리캡챠 토큰 상태 추가
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [isPinModalOpen, setIsPinModalOpen] = useState(false);
 
   const navigate = useNavigate();
