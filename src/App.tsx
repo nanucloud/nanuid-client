@@ -8,6 +8,7 @@ import MobileLoginPage from "./pages/mobile/MobileLoginPage";
 import MobileRegisterPage from "./pages/mobile/MobileRegisterPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MobileProtectedRoute from "./components/MobileProtectedRoute";
+import HomePage from "./pages/HomePage";
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
         />
         <Route path="/app/login" element={<MobileLoginPage />} />
         <Route path="/app/register" element={<MobileRegisterPage />} />
+        <Route path="/home" element={<HomePage />} />
 
         
       </Routes>
