@@ -5,6 +5,7 @@ interface ProfileImageUploadProps {
   profileImage: string;
   userName: string;
 }
+
 const ProfileImageUpload: React.FC<ProfileImageUploadProps> = ({ profileImage, userName }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
