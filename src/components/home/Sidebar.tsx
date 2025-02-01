@@ -44,7 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({ name, email, profileUrl = "/default_p
       <nav className="flex-1 p-2">
         <SidebarLink to="/home" icon="🏠" text="홈" active={location.pathname === "/home"} />
         <SidebarLink to="/tokens" icon="🔑" text="토큰" active={location.pathname.startsWith("/tokens")} />
-        <SidebarLink to="/auth" icon="🔒" text="보안" active={location.pathname === "/auth"} />
+        <SidebarLink to="/security" icon="🔒" text="보안" active={location.pathname === "/auth"} />
         <SidebarLink to="/info" icon="ℹ️" text="마이페이지" active={location.pathname === "/info"} />
       </nav>
     </aside>

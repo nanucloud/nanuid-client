@@ -11,6 +11,7 @@ import MobileProtectedRoute from "./components/MobileProtectedRoute";
 import HomePage from "./pages/HomePage";
 import TokenInfoPage from "./pages/TokenInfoPage";
 import MyPage from "./pages/MyPage";
+import SecurityPage from "./pages/SecurityPage";
 
 const App = () => {
   return (
@@ -42,6 +43,7 @@ const App = () => {
         <Route path="/app/register" element={<MobileRegisterPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/tokens" element={<TokenInfoPage />} />
+        <Route path="/security" element={<SecurityPage />} />
         <Route path="/info" element={<MyPage />} />
 
         

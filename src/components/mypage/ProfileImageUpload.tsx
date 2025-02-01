@@ -1,42 +1,46 @@
-import React, { useState } from 'react';
-import { Upload } from 'lucide-react';
+import React, { useState } from "react";
+import { Camera } from "lucide-react";
 
 interface ProfileImageUploadProps {
   profileImage: string;
   userName: string;
+  className?: string;
 }
 
-const ProfileImageUpload: React.FC<ProfileImageUploadProps> = ({ profileImage, userName }) => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+const ProfileImageUpload: React.FC<ProfileImageUploadProps> = ({ profileImage, userName, className }) => {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setSelectedFile(event.target.files[0]);
+    if (event.target.files && event.target.files[0]) {
+      const imageUrl = URL.createObjectURL(event.target.files[0]);
+      setSelectedImage(imageUrl);
     }
   };
 
   return (
-    <div className="flex items-center space-x-4">
-      {/* Avatar 부분을 간단한 img 태그로 대체 */}
-      <div className="w-24 h-24 rounded-full overflow-hidden">
-        <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
-      </div>
-      <div>
-        <input 
-          type="file" 
-          id="profile-upload" 
-          className="hidden" 
-          accept="image/*"
-          onChange={handleFileChange}
+    <div className={`relative ${className}`}>
+      <label htmlFor="profile-upload" className="cursor-pointer">
+        {/* 프로필 이미지 */}
+        <img
+          src={selectedImage || profileImage}
+          alt={`${userName}의 프로필 이미지`}
+          className="w-full h-full object-cover rounded-full"
         />
-        <label 
-          htmlFor="profile-upload" 
-          className="flex items-center bg-blue-50 text-blue-600 px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-100"
-        >
-          <Upload size={18} className="mr-2" />
-          프로필 사진 변경
-        </label>
-      </div>
+        
+        {/* 업로드 버튼 */}
+        <div className="absolute bottom-0 right-0 bg-blue-500 text-white p-1.5 rounded-full shadow-md cursor-pointer hover:bg-blue-600 transition">
+          <Camera size={16} />
+        </div>
+      </label>
+
+      {/* 파일 업로드 input (숨김) */}
+      <input
+        type="file"
+        id="profile-upload"
+        className="hidden"
+        accept="image/*"
+        onChange={handleFileChange}
+      />
     </div>
   );
 };
