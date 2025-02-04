@@ -26,7 +26,6 @@ const App = () => {
       />
       
       <Routes>
-        {/* 기본 경로: UserProfileProvider와 ProtectedRoute로 감싸서 인증 후 /home으로 리다이렉트 */}
         <Route
           path="/"
           element={
@@ -38,11 +37,9 @@ const App = () => {
           }
         />
 
-        {/* 인증 없이 접근 가능한 페이지 */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
-        {/* 모바일 관련 페이지 */}
         <Route path="/app/login" element={<MobileLoginPage />} />
         <Route path="/app/register" element={<MobileRegisterPage />} />
         <Route
@@ -54,7 +51,6 @@ const App = () => {
           }
         />
 
-        {/* 인증이 필요한 페이지들을 하나의 그룹으로 묶음 */}
         <Route
           element={
             <UserProfileProvider>
@@ -67,7 +63,7 @@ const App = () => {
           <Route path="/home" element={<HomePage />} />
           <Route path="/tokens" element={<TokenInfoPage />} />
           <Route path="/security" element={<SecurityPage />} />
-          <Route path="/info" element={<MyPage />} />
+          <Route path="/mypage" element={<MyPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
