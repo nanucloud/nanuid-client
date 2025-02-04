@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import SidebarLink from "./SidebarLink";
+import { AuthService } from "../../services/AuthService";
 
 interface SidebarProps {
   name: string;
@@ -10,6 +11,10 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ name, email, profileUrl = "/default_profile.png" }) => {
   const location = useLocation();
+
+  const handleLogout = async () => {
+    await AuthService.logout();
+  };
 
   return (
     <aside className="w-20 md:w-64 bg-white border-r border-gray-200 hidden md:block flex-shrink-0">
@@ -46,6 +51,16 @@ const Sidebar: React.FC<SidebarProps> = ({ name, email, profileUrl = "/default_p
         <SidebarLink to="/tokens" icon="🔑" text="토큰" active={location.pathname.startsWith("/tokens")} />
         <SidebarLink to="/security" icon="🔒" text="보안" active={location.pathname === "/auth"} />
         <SidebarLink to="/info" icon="ℹ️" text="마이페이지" active={location.pathname === "/info"} />
+
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center justify-between py-3 hover:bg-gray-50 px-2 rounded-lg transition-colors mt-4"
+        >
+          <div className="flex items-center gap-3">
+            <span role="img" aria-label="logout" className="text-red-500">🚪</span>
+            <span className="text-gray-700">로그아웃</span>
+          </div>
+        </button>
       </nav>
     </aside>
   );

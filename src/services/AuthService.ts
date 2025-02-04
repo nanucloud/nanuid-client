@@ -1,4 +1,4 @@
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 import { AuthResponse, UserProfile } from "../types/Auth";
 import { AuthType } from "./dto/request/AuthType";
@@ -21,7 +21,7 @@ export class AuthService {
     });
 
     const result = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(result.message || "로그인 실패");
     }
@@ -42,19 +42,20 @@ export class AuthService {
 
     const result = await response.json();
     if (!response.ok) throw new Error(result.message || "토큰 재발급 실패");
-    
+
     this.storeTokens(result);
     return result;
   }
 
-  // 사용자 프로필 조회
   static async getProfile(): Promise<UserProfile> {
     const response = await this.authFetch(`${BASE_URL}/auth/userinfo`);
     return response.json();
   }
 
-  // 인증된 요청 처리 래퍼
-  private static async authFetch(input: RequestInfo, init?: RequestInit): Promise<Response> {
+  private static async authFetch(
+    input: RequestInfo,
+    init?: RequestInit
+  ): Promise<Response> {
     let accessToken = Cookies.get("access_token");
     let response = await fetch(input, {
       ...init,
@@ -74,16 +75,26 @@ export class AuthService {
 
   private static buildRequestBody(data: LoginRequest) {
     if (data.authType === AuthType.APP) {
-      // loginRequestViaApp 사용
       return loginRequestViaApp(data);
     } else {
-      // loginRequestViaPin 사용
       return loginRequestViaPin(data);
     }
   }
 
   private static storeTokens(tokens: AuthResponse) {
-    Cookies.set("access_token", tokens.access_token, { secure: true, expires: 1 });
-    Cookies.set("refresh_token", tokens.refresh_token, { secure: true, expires: 7 });
+    Cookies.set("access_token", tokens.access_token, {
+      secure: true,
+      expires: 1,
+    });
+    Cookies.set("refresh_token", tokens.refresh_token, {
+      secure: true,
+      expires: 7,
+    });
+  }
+
+  static async logout(redirectUrl: string = "/login"): Promise<void> {
+    Cookies.remove("access_token");
+    Cookies.remove("refresh_token");
+    window.location.href = redirectUrl;
   }
 }
