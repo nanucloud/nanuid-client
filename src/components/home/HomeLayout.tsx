@@ -9,7 +9,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children  , username , email} ) => (
   <div className="flex min-h-screen bg-gray-50">
-     <Sidebar name={username} email={email} />
+     <Sidebar />
     <main className="flex-1 p-4 md:p-6 max-w-5xl">{children}</main>
   </div>
 );
