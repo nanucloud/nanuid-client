@@ -1,20 +1,11 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import SidebarLink from "./SidebarLink";
-import { AuthService } from "../../services/AuthService";
+import { useUserProfile } from "../UserProfileContext";
 
-interface SidebarProps {
-  name: string;
-  email: string;
-  profileUrl?: string;
-}
-
-const Sidebar: React.FC<SidebarProps> = ({ name, email, profileUrl = "/default_profile.png" }) => {
+const Sidebar: React.FC = () => {
   const location = useLocation();
-
-  const handleLogout = async () => {
-    await AuthService.logout();
-  };
+  const { userProfile } = useUserProfile();
 
   return (
     <aside className="w-20 md:w-64 bg-white border-r border-gray-200 hidden md:block flex-shrink-0">
@@ -30,15 +21,15 @@ const Sidebar: React.FC<SidebarProps> = ({ name, email, profileUrl = "/default_p
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 rounded-full overflow-hidden">
             <img
-              src={profileUrl}
+              src={userProfile?.profileUrl || "/default_profile.png"}
               alt="Profile"
               className="w-full h-full object-cover"
             />
           </div>
 
           <div className="flex-1">
-            <p className="font-medium">{name}</p>
-            <p className="text-sm text-gray-500">{email}</p>
+            <p className="font-medium">{userProfile?.name || "이름 없음"}</p>
+            <p className="text-sm text-gray-500">{userProfile?.email || "이메일 없음"}</p>
           </div>
         </div>
         <div className="mt-2 px-2 py-1 text-xs bg-orange-100 text-orange-600 rounded inline-block">
@@ -50,17 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({ name, email, profileUrl = "/default_p
         <SidebarLink to="/home" icon="🏠" text="홈" active={location.pathname === "/home"} />
         <SidebarLink to="/tokens" icon="🔑" text="토큰" active={location.pathname.startsWith("/tokens")} />
         <SidebarLink to="/security" icon="🔒" text="보안" active={location.pathname === "/auth"} />
-        <SidebarLink to="/info" icon="ℹ️" text="마이페이지" active={location.pathname === "/info"} />
-
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center justify-between py-3 hover:bg-gray-50 px-2 rounded-lg transition-colors mt-4"
-        >
-          <div className="flex items-center gap-3">
-            <span role="img" aria-label="logout" className="text-red-500">🚪</span>
-            <span className="text-gray-700">로그아웃</span>
-          </div>
-        </button>
+        <SidebarLink to="/mypage" icon="ℹ️" text="마이페이지" active={location.pathname === "/mypage"} />
       </nav>
     </aside>
   );

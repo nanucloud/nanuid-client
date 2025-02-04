@@ -25,4 +25,5 @@ export interface UserProfile {
   email: string;
   name: string;
   accountStatus: boolean;
+  profileUrl: string;
 }
