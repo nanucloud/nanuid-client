@@ -45,7 +45,7 @@ const LoginPage = () => {
         redirectUrl: "/app/home",
       };
 
-      await AuthService.execute(loginData);
+      await AuthService.login(loginData);
       toast.success("로그인 성공!");
       navigate("/home");
     } catch (err) {
@@ -79,7 +79,7 @@ const LoginPage = () => {
         return;
       }
 
-      await AuthService.execute(loginData);
+      await AuthService.login(loginData);
       toast.success("로그인 성공!");
       navigate("/home");
     } catch (err) {
