@@ -5,12 +5,10 @@ export interface LoginFormData {
 }
 
 export interface AuthResponse {
-  token: string;
-  user: {
-    id: string;
-    email: string;
-  };
+  access_token: string;
+  refresh_token: string;
 }
+
 
 export interface RegisterFormData {
   email: string;
@@ -21,4 +19,10 @@ export interface RegisterFormData {
   pin: string;
   confirmPin: string;
   termsAccepted: boolean;
+}
+
+export interface UserProfile {
+  email: string;
+  name: string;
+  accountStatus: boolean;
 }
