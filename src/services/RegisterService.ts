@@ -11,7 +11,7 @@ export class RegisterService {
     redirectUrl?: string;
   }) {
     const deviceToken = window.nanu_androidgw?.devicetoken || "WEB_NONE";
-    
+
     const response = await fetch(`${BASE_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

@@ -8,7 +8,7 @@ import { RegisterService } from "../services/RegisterService";
 import { toast } from "react-toastify";
 
 const RegisterPage = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterFormData>({
     email: "",
     password: "",
     confirmPassword: "",
@@ -46,7 +46,7 @@ const RegisterPage = () => {
         redirectUrl: "/login",
       });
     } catch (error) {
-      toast.error("회원가입에 실패했습니다.");
+      toast.error("회원가입에 실패했습니다. 잠시 후 시도해 주세요.");
     }
   };
 
