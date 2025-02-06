@@ -126,7 +126,6 @@ const MyPage: React.FC = () => {
         )}
       </div>
 
-      {/* 로그아웃 버튼 */}
       <div className="mt-6">
         <button className="w-full flex items-center justify-center gap-2 py-3 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors">
           <LogOut size={18} />

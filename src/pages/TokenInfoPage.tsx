@@ -4,6 +4,7 @@ import { TokenService } from "../services/TokenService";
 import { getLocationByIP } from "../services/IpLocationService";
 import Token from "../types/Token";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const TokenInfoPage: React.FC = () => {
   const [tokens, setTokens] = useState<Token[]>([]);
@@ -133,16 +134,14 @@ const TokenInfoPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4">
+    <div className="max-w-5xl mx-auto">
       <header className="mb-8">
         <h1 className="text-4xl font-bold">토큰 내역</h1>
         <p className="text-gray-600 mt-2">로그인된 토큰 기록을 관리합니다</p>
       </header>
 
       {isLoading ? (
-        <div className="flex justify-center items-center h-32">
-          <div className="text-gray-600">로딩 중...</div>
-        </div>
+       <LoadingSpinner />
       ) : (
         <>
           <TokenHistoryList
