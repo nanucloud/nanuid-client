@@ -9,7 +9,7 @@ const LoginBanner = () => {
       }}
     >
       <div className="absolute top-10 left-10">
-        <h1 className="text-xl text-white mb-2 font-bold">
+        <h1 className="text-l text-white mb-2 font-primary">
           최대 보안. 최대 편리함.
         </h1>
         <img

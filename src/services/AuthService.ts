@@ -1,5 +1,4 @@
 import Cookies from "js-cookie";
-
 import { AuthResponse, UserProfile } from "../types/Auth";
 import { AuthType } from "./dto/request/AuthType";
 import { LoginRequest } from "./dto/request/LoginRequest";
@@ -48,9 +47,12 @@ export class AuthService {
   }
 
   static async getProfile(): Promise<UserProfile> {
-    const response = await this.authFetch(`${BASE_URL}/auth/userinfo`);
-    return response.json();
+    const isValid = await this.isValid();
+    if (!isValid) throw new Error("세션 만료됨. 다시 로그인 필요");
+    
+    return this.authFetch(`${BASE_URL}/auth/userinfo`).then((res) => res.json());
   }
+  
 
   private static async authFetch(
     input: RequestInfo,
@@ -70,31 +72,88 @@ export class AuthService {
         headers: { ...init?.headers, Authorization: `Bearer ${accessToken}` },
       });
     }
+
     return response;
   }
 
   private static buildRequestBody(data: LoginRequest) {
-    if (data.authType === AuthType.APP) {
-      return loginRequestViaApp(data);
-    } else {
-      return loginRequestViaPin(data);
-    }
+    return data.authType === AuthType.APP ? loginRequestViaApp(data) : loginRequestViaPin(data);
   }
 
   private static storeTokens(tokens: AuthResponse) {
-    Cookies.set("access_token", tokens.access_token, {
-      secure: true,
-      expires: 1,
-    });
-    Cookies.set("refresh_token", tokens.refresh_token, {
-      secure: true,
-      expires: 7,
-    });
+    Cookies.set("access_token", tokens.access_token, { secure: true, expires: 1 });
+    Cookies.set("refresh_token", tokens.refresh_token, { secure: true, expires: 7 });
+
+    this.scheduleTokenRefresh();
   }
 
   static async logout(redirectUrl: string = "/login"): Promise<void> {
     Cookies.remove("access_token");
     Cookies.remove("refresh_token");
     window.location.href = redirectUrl;
+  }
+
+  private static parseJwt(token: string): { exp: number } | null {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join("")
+      );
+      return JSON.parse(jsonPayload);
+    } catch {
+      return null;
+    }
+  }
+
+  private static isTokenExpired(): boolean {
+    let token = Cookies.get("access_token");
+    if(!token) {
+      return true
+    }
+    const decoded = this.parseJwt(token);
+    if (!decoded || !decoded.exp) return true;
+    const currentTime = Math.floor(Date.now() / 1000);
+    return decoded.exp < currentTime;
+  }
+
+  private static getRemainingTime(token: string): number {
+    const decoded = this.parseJwt(token);
+    if (!decoded || !decoded.exp) return 0;
+    const currentTime = Math.floor(Date.now() / 1000);
+    return decoded.exp - currentTime;
+  }
+
+  private static scheduleTokenRefresh() {
+    const accessToken = Cookies.get("access_token");
+    if (!accessToken) return;
+
+    const remainingTime = this.getRemainingTime(accessToken);
+    const timeout = remainingTime > 60 ? (remainingTime - 60) * 1000 : 0;
+
+    setTimeout(async () => {
+      try {
+        await this.reissueToken();
+      } catch (error) {
+        console.error("토큰 자동 갱신 실패", error);
+      }
+    }, timeout);
+  }
+
+  static async isValid(): Promise<boolean> {
+    let accessToken = Cookies.get("access_token");
+    if (!accessToken || this.isTokenExpired()) {
+      try {
+        await this.reissueToken();
+        accessToken = Cookies.get("access_token");
+        return accessToken ? !this.isTokenExpired() : false;
+      } catch {
+        return false;
+      }
+    }
+    return true;
   }
 }
