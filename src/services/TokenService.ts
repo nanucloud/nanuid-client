@@ -4,13 +4,14 @@ import SERVICE_API_URL from "./ServiceEndPoint";
 import Token from "../types/Token";
 
 const BASE_URL = SERVICE_API_URL.BASE_URL;
+
 export class TokenService {
-  
-  static async getAllTokens(): Promise<Token[]> {
+
+  static async getAllTokens(page: number = 0): Promise<any> {
     const accessToken = Cookies.get("access_token");
     if (!accessToken) throw new Error("Access token not found");
   
-    const response = await fetch(`${BASE_URL}/token/getAll`, {
+    const response = await fetch(`${BASE_URL}/token/getTokens?page=${page}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -36,25 +37,12 @@ export class TokenService {
       return date.toLocaleString("ko-KR", options);
     };
   
-    // 원본 authTime을 저장해두고 표시용 시간만 변환
-    const updatedTokens: Token[] = result.map((token: Token) => {
-      const originalAuthTime = token.authTime; // 원본 시간 저장
-      return {
-        ...token,
-        originalAuthTime, // 정렬용 원본 시간 보존
-        authTime: convertToKST(token.authTime), // 표시용 변환된 시간
-      };
-    });
+    result.content = result.content.map((token: any) => ({
+      ...token,
+      authTime: convertToKST(token.authTime),
+    }));
   
-    // 원본 시간을 기준으로 정렬
-    updatedTokens.sort((a: Token, b: Token) => {
-      const dateA = new Date(a.originalAuthTime || a.authTime);
-      const dateB = new Date(b.originalAuthTime || b.authTime);
-      return dateB.getTime() - dateA.getTime();
-    });
-  
-    // 정렬 후 원본 시간 필드 제거
-    return updatedTokens.map(({ originalAuthTime, ...token }) => token);
+    return result;
   }
 
   static async deleteToken(tokenId: string): Promise<void> {

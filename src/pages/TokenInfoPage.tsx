@@ -1,22 +1,16 @@
 import { useState, useEffect } from "react";
 import TokenHistoryList from "../components/token/TokenHistoryList";
-import { TokenService } from "../services/TokenService"; // TokenService import 추가
+import { TokenService } from "../services/TokenService";
 import { getLocationByIP } from "../services/IpLocationService";
-
-interface Token {
-  refreshTokenId: string;
-  applicationId: string;
-  applicationName: string;
-  deviceType: string;
-  authTime: string;
-  ip: string;
-  location?: string;
-}
+import Token from "../types/Token";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 const TokenInfoPage: React.FC = () => {
-  const [tokens, setTokens] = useState<Token[]>([]); // 초기값을 빈 배열로 설정
+  const [tokens, setTokens] = useState<Token[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // 토큰 위치 정보를 업데이트하는 함수
   const fetchLocationForTokens = async (tokens: Token[]) => {
     const updatedTokens = await Promise.all(
       tokens.map(async (token) => {
@@ -24,58 +18,141 @@ const TokenInfoPage: React.FC = () => {
         return { ...token, location };
       })
     );
-    setTokens(updatedTokens); // 위치 정보 업데이트
+    setTokens(updatedTokens);
   };
 
-  // 서버에서 실제 토큰 목록을 가져오는 함수
-  const fetchTokens = async () => {
+  const fetchTokens = async (page: number) => {
+    setIsLoading(true);
     try {
-      const tokensFromServer = await TokenService.getAllTokens(); // TokenService를 통해 토큰 가져오기
-      setTokens(tokensFromServer); // 가져온 토큰 목록 설정
-      await fetchLocationForTokens(tokensFromServer); // 위치 정보 가져오기 (비동기)
+      const response: any = await TokenService.getAllTokens(page);
+      setTokens(response.content);
+      setTotalPages(response.totalPages);
+      await fetchLocationForTokens(response.content);
     } catch (error) {
       console.error("토큰을 가져오는 데 실패했습니다", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // 최초 렌더링 시 토큰 목록 가져오기
   useEffect(() => {
-    fetchTokens(); // 페이지가 로드될 때 토큰 목록 가져오기
-  }, []); // 최초 렌더링 시 한 번만 실행
+    fetchTokens(currentPage);
+  }, [currentPage]);
 
-  // 토큰 삭제 처리
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
   const handleDeleteToken = async (refreshTokenId: string) => {
     try {
-      await TokenService.deleteToken(refreshTokenId); // TokenService를 통해 토큰 삭제
-      setTokens(tokens.filter((token) => token.refreshTokenId !== refreshTokenId)); // 화면에서 해당 토큰 삭제
-      console.log(`Token ${refreshTokenId} deleted`);
+      await TokenService.deleteToken(refreshTokenId);
+      await fetchTokens(currentPage);
     } catch (error) {
       console.error("토큰 삭제 실패", error);
     }
   };
 
-  // IP 차단 처리
   const handleBlockIP = async (ip: string) => {
     try {
-      await TokenService.blockIP(ip); // TokenService를 통해 IP 차단
-      console.log(`IP ${ip} blocked`);
+      await TokenService.blockIP(ip);
     } catch (error) {
       console.error("IP 차단 실패", error);
     }
   };
 
+  const renderPagination = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(0, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages - 1, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(0, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          onClick={() => handlePageChange(i)}
+          className={`
+            w-10 h-10 flex items-center justify-center rounded-lg
+            text-sm font-medium transition-all duration-200
+            ${currentPage === i 
+              ? "bg-blue-50 text-blue-600 hover:bg-blue-100" 
+              : "text-gray-600 hover:bg-gray-100"
+            }
+          `}
+        >
+          {i + 1}
+        </button>
+      );
+    }
+
+    return (
+      <div className="flex items-center justify-center mt-8 space-x-1">
+        <button
+          onClick={() => handlePageChange(0)}
+          disabled={currentPage === 0}
+          className="w-10 h-10 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:hover:bg-transparent"
+          aria-label="처음 페이지"
+        >
+          <ChevronsLeft size={18} />
+        </button>
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 0}
+          className="w-10 h-10 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:hover:bg-transparent"
+          aria-label="이전 페이지"
+        >
+          <ChevronLeft size={18} />
+        </button>
+        
+        <div className="flex items-center space-x-1">
+          {pages}
+        </div>
+        
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages - 1}
+          className="w-10 h-10 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:hover:bg-transparent"
+          aria-label="다음 페이지"
+        >
+          <ChevronRight size={18} />
+        </button>
+        <button
+          onClick={() => handlePageChange(totalPages - 1)}
+          disabled={currentPage === totalPages - 1}
+          className="w-10 h-10 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:hover:bg-transparent"
+          aria-label="마지막 페이지"
+        >
+          <ChevronsRight size={18} />
+        </button>
+      </div>
+    );
+  };
+
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-5xl mx-auto px-4">
       <header className="mb-8">
         <h1 className="text-4xl font-bold">토큰 내역</h1>
         <p className="text-gray-600 mt-2">로그인된 토큰 기록을 관리합니다</p>
       </header>
 
-      <TokenHistoryList
-        tokens={tokens}
-        onDelete={handleDeleteToken}
-        onBlockIP={handleBlockIP}
-      />
+      {isLoading ? (
+        <div className="flex justify-center items-center h-32">
+          <div className="text-gray-600">로딩 중...</div>
+        </div>
+      ) : (
+        <>
+          <TokenHistoryList
+            tokens={tokens}
+            onDelete={handleDeleteToken}
+            onBlockIP={handleBlockIP}
+          />
+          {totalPages > 1 && renderPagination()}
+        </>
+      )}
     </div>
   );
 };

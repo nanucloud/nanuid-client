@@ -1,3 +1,5 @@
+import { TokenService } from "./TokenService";
+
 export interface LoginHistory {
   date: string;
   service: string;
@@ -11,19 +13,18 @@ export interface Status {
 }
 
 export class HomeService {
-  static async getLoginHistory(): Promise<LoginHistory[]> {
-    return [
-      {
-        date: "2024.1.23 AM 9:00 KST",
-        service: "DASHBOARD(NANUID)",
-        device: "Android Web",
-      },
-      {
-        date: "2024.1.21 AM 2:00 KST",
-        service: "VocaVault Service",
-        device: "Windows Web",
-      },
-    ];
+  static async getLoginHistory(page: number = 0): Promise<any> {
+    try {
+      const response = await TokenService.getAllTokens(page);
+      return response.content.map((token: any) => ({
+        date: token.authTime,
+        service: token.applicationName,
+        device: token.deviceType,
+      }));
+    } catch (error) {
+      console.error("로그인 기록 조회 실패", error);
+      throw error;
+    }
   }
 
   static async getStatusList(): Promise<Status[]> {

@@ -13,7 +13,6 @@ const Sidebar = () => {
 
   return (
     <aside className="fixed left-0 top-0 w-16 md:w-64 min-h-screen bg-white flex flex-col border-r border-gray-100 shadow-sm">
-      {/* Logo Section - Fixed */}
       <div className="p-6 pb-4 bg-white">
         <img
           src="/nanuid_favicon.svg"
@@ -27,9 +26,7 @@ const Sidebar = () => {
         />
       </div>
 
-      {/* Scrollable Container */}
       <div className="flex flex-col flex-1 overflow-y-auto">
-        {/* Profile Section - 모바일에서 숨김 */}
         <div className="hidden md:block px-4 py-5 border-b border-gray-100 bg-white">
           <div className="flex items-center gap-3">
             <div className="relative">
@@ -61,7 +58,6 @@ const Sidebar = () => {
           </div>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 flex flex-col px-2 py-4 gap-1">
           <SidebarLink
             to="/home"
