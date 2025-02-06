@@ -45,9 +45,9 @@ const ApplicationPage: React.FC = () => {
   
     const handleDeleteApplication = async (appId: string) => {
       const success = await ApplicationService.deleteApplication(appId);
-      if (success) {
-        setApplications(apps => apps.filter(app => app.applicationId !== appId));
-      }
+      // if (success) {
+      //   setApplications(apps => apps.filter(app => app.applicationId !== appId));
+      // }
     };
   
     if (!userProfile) return null;
