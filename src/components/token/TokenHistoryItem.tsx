@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Shield, Trash2, Monitor, Globe, Clock } from 'lucide-react';
+import { Shield, Trash2, Globe, Clock, Monitor } from 'lucide-react';
+import { FaApple, FaAndroid, FaLaptop, FaWindows } from 'react-icons/fa';  // Windows 아이콘 추가
 import Token from '../../types/Token';
 
 interface TokenHistoryItemProps {
@@ -21,13 +22,28 @@ const TokenHistoryItem: React.FC<TokenHistoryItemProps> = ({ token, onDelete, on
     setShowModal(false);
   };
 
+  const getDeviceIcon = (deviceType: string) => {
+    switch (deviceType) {
+      case 'ANDROID':
+        return <FaAndroid size={16} className="text-green-600" />;
+      case 'IOS':
+        return <FaApple size={16} className="text-gray-800" />;
+      case 'MAC':
+        return <FaLaptop size={16} className="text-gray-800" />;
+      case 'WINDOWS':
+        return <FaWindows size={16} className="text-blue-600" />;
+      default:
+        return <Monitor size={16} className="text-gray-500" />;
+    }
+  };
+
   return (
     <div className="bg-white rounded-xl p-4 mb-3 shadow-toss transition-all hover:shadow-toss-hover">
       {/* 헤더 섹션 */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-            <Monitor size={16} className="text-blue-600" />
+            {getDeviceIcon(token.deviceType)}
           </div>
           <div>
             <h3 className="font-semibold text-gray-900">{token.applicationName}</h3>
@@ -73,7 +89,6 @@ const TokenHistoryItem: React.FC<TokenHistoryItemProps> = ({ token, onDelete, on
         </button>
       </div>
 
-      {/* 토스 스타일 모달 */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md">

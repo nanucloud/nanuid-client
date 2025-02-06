@@ -9,7 +9,6 @@ import {
   LogOut,
 } from "lucide-react";
 import PasswordChangeDialog from "../components/mypage/PasswordChangeDialog";
-import PinChangeDialog from "../components/mypage/PinChangeDialog";
 import ProfileImageUpload from "../components/mypage/ProfileImageUpload";
 import Layout from "../components/home/HomeLayout";
 
@@ -93,16 +92,6 @@ const MyPage: React.FC = () => {
                 <ChevronRight size={18} className="text-gray-400" />
               </button>
             </PasswordChangeDialog>
-
-            <PinChangeDialog>
-              <button className="w-full flex items-center justify-between py-3 hover:bg-gray-50 px-2 rounded-lg transition-colors">
-                <div className="flex items-center gap-3">
-                  <Smartphone size={18} className="text-green-500" />
-                  <span className="text-gray-700">보안 PIN 변경</span>
-                </div>
-                <ChevronRight size={18} className="text-gray-400" />
-              </button>
-            </PinChangeDialog>
           </div>
         </div>
       </div>

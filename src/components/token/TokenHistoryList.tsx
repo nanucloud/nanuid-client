@@ -10,9 +10,11 @@ interface TokenHistoryListProps {
 }
 
 const TokenHistoryList: React.FC<TokenHistoryListProps> = ({ tokens, onDelete, onBlockIP }) => {
+  const sortedTokens = [...tokens].sort((a, b) => new Date(b.authTime).getTime() - new Date(a.authTime).getTime());
+
   return (
     <div className="space-y-3">
-      {tokens.map((token) => (
+      {sortedTokens.map((token) => (
         <TokenHistoryItem
           key={token.refreshTokenId}
           token={token}
@@ -21,10 +23,10 @@ const TokenHistoryList: React.FC<TokenHistoryListProps> = ({ tokens, onDelete, o
         />
       ))}
 
-      {tokens.length === 0 && (
+      {sortedTokens.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 bg-gray-50 rounded-xl">
           <Shield size={40} className="text-gray-300 mb-3" />
-          <p className="text-gray-400 text-sm">등록된 토큰이 없습니다</p>
+          <p className="text-gray-400 text-sm">등록된 토큰이 없습니다..? 음.. 다시 시도해 보세요</p>
         </div>
       )}
     </div>

@@ -6,4 +6,5 @@ export default interface Token {
   authTime: string;
   ip: string;
   location?: string;
+  originalAuthTime?: Date;
 }
