@@ -49,10 +49,11 @@ export class AuthService {
   static async getProfile(): Promise<UserProfile> {
     const isValid = await this.isValid();
     if (!isValid) throw new Error("세션 만료됨. 다시 로그인 필요");
-    
-    return this.authFetch(`${BASE_URL}/auth/userinfo`).then((res) => res.json());
+
+    return this.authFetch(`${BASE_URL}/auth/userinfo`).then((res) =>
+      res.json()
+    );
   }
-  
 
   private static async authFetch(
     input: RequestInfo,
@@ -77,12 +78,20 @@ export class AuthService {
   }
 
   private static buildRequestBody(data: LoginRequest) {
-    return data.authType === AuthType.APP ? loginRequestViaApp(data) : loginRequestViaPin(data);
+    return data.authType === AuthType.APP
+      ? loginRequestViaApp(data)
+      : loginRequestViaPin(data);
   }
 
   private static storeTokens(tokens: AuthResponse) {
-    Cookies.set("access_token", tokens.access_token, { secure: true, expires: 1 });
-    Cookies.set("refresh_token", tokens.refresh_token, { secure: true, expires: 7 });
+    Cookies.set("access_token", tokens.access_token, {
+      secure: true,
+      expires: 1,
+    });
+    Cookies.set("refresh_token", tokens.refresh_token, {
+      secure: true,
+      expires: 7,
+    });
 
     this.scheduleTokenRefresh();
   }
@@ -111,8 +120,8 @@ export class AuthService {
 
   private static isTokenExpired(): boolean {
     let token = Cookies.get("access_token");
-    if(!token) {
-      return true
+    if (!token) {
+      return true;
     }
     const decoded = this.parseJwt(token);
     if (!decoded || !decoded.exp) return true;
@@ -143,7 +152,7 @@ export class AuthService {
     }, timeout);
   }
 
-  static async isValid(): Promise<boolean> {
+  static async isValid(redirectUrl: string = "/login"): Promise<boolean> {
     let accessToken = Cookies.get("access_token");
     if (!accessToken || this.isTokenExpired()) {
       try {
@@ -151,7 +160,7 @@ export class AuthService {
         accessToken = Cookies.get("access_token");
         return accessToken ? !this.isTokenExpired() : false;
       } catch {
-        return false;
+        this.logout(redirectUrl);
       }
     }
     return true;

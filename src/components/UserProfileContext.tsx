@@ -4,6 +4,7 @@ import { UserProfile } from "../types/Auth";
 
 interface UserProfileContextType {
   userProfile: UserProfile | null;
+  isLoading: boolean;
   refreshProfile: () => Promise<void>;
 }
 
@@ -11,13 +12,18 @@ const UserProfileContext = createContext<UserProfileContextType | undefined>(und
 
 export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const refreshProfile = async () => {
+    setIsLoading(true);
     try {
       const data = await AuthService.getProfile();
       setUserProfile(data);
     } catch (error) {
       console.error("프로필 불러오기 실패:", error);
+      setUserProfile(null);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -26,7 +32,7 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
   }, []);
 
   return (
-    <UserProfileContext.Provider value={{ userProfile, refreshProfile }}>
+    <UserProfileContext.Provider value={{ userProfile, isLoading, refreshProfile }}>
       {children}
     </UserProfileContext.Provider>
   );

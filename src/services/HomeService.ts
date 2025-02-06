@@ -1,5 +1,3 @@
-import { AuthService } from "../services/AuthService";
-
 export interface LoginHistory {
   date: string;
   service: string;
@@ -46,9 +44,5 @@ export class HomeService {
         active: true,
       },
     ];
-  }
-
-  static async getUserProfile() {
-    return await AuthService.getProfile();
   }
 }

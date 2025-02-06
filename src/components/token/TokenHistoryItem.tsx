@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
 import { Shield, Trash2, Monitor, Globe, Clock } from 'lucide-react';
+import Token from '../../types/Token';
 
 interface TokenHistoryItemProps {
-  token: {
-    id: string;
-    service: string;
-    date: string;
-    device: string;
-    ip: string;
-    location: string;
-  };
+  token: Token;
   onDelete: (id: string) => void;
   onBlockIP: (ip: string) => void;
 }
@@ -20,7 +14,7 @@ const TokenHistoryItem: React.FC<TokenHistoryItemProps> = ({ token, onDelete, on
 
   const handleAction = () => {
     if (actionType === 'delete') {
-      onDelete(token.id);
+      onDelete(token.refreshTokenId);
     } else {
       onBlockIP(token.ip);
     }
@@ -36,8 +30,8 @@ const TokenHistoryItem: React.FC<TokenHistoryItemProps> = ({ token, onDelete, on
             <Monitor size={16} className="text-blue-600" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">{token.service}</h3>
-            <p className="text-xs text-gray-500">{token.device}</p>
+            <h3 className="font-semibold text-gray-900">{token.applicationName}</h3>
+            <p className="text-xs text-gray-500">{token.deviceType}</p>
           </div>
         </div>
         <span className="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-600">
@@ -49,7 +43,7 @@ const TokenHistoryItem: React.FC<TokenHistoryItemProps> = ({ token, onDelete, on
       <div className="grid grid-cols-2 gap-3 text-sm mb-4">
         <div className="flex items-center gap-2">
           <Clock size={16} className="text-gray-400" />
-          <span className="text-gray-600">{token.date}</span>
+          <span className="text-gray-600">{token.authTime}</span>
         </div>
         <div className="flex items-center gap-2">
           <Globe size={16} className="text-gray-400" />
@@ -89,7 +83,7 @@ const TokenHistoryItem: React.FC<TokenHistoryItemProps> = ({ token, onDelete, on
               </h3>
               <p className="text-sm text-gray-500">
                 {actionType === 'delete' 
-                  ? `정말로 ${token.service} 토큰을 삭제하시겠어요?`
+                  ? `정말로 ${token.applicationId} 토큰을 삭제하시겠어요?`
                   : `이 IP 주소(${token.ip})를 차단하시겠어요?`}
               </p>
             </div>

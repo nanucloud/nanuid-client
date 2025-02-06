@@ -1,8 +1,9 @@
 export default interface Token {
-  id: string;
-  service: string;
-  date: string;
-  device: string;
+  refreshTokenId: string;
+  applicationId: string;
+  applicationName: string;
+  deviceType: string;
+  authTime: string;
   ip: string;
-  location: string;
+  location?: string;
 }

@@ -13,14 +13,14 @@ const TokenHistoryList: React.FC<TokenHistoryListProps> = ({ tokens, onDelete, o
   return (
     <div className="space-y-3">
       {tokens.map((token) => (
-        <TokenHistoryItem 
-          key={token.id} 
+        <TokenHistoryItem
+          key={token.refreshTokenId}
           token={token}
           onDelete={onDelete}
           onBlockIP={onBlockIP}
         />
       ))}
-      
+
       {tokens.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 bg-gray-50 rounded-xl">
           <Shield size={40} className="text-gray-300 mb-3" />
