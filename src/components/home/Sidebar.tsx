@@ -81,6 +81,13 @@ const Sidebar = () => {
             hideTextOnMobile={true}
           />
           <SidebarLink
+            to="/applications"
+            icon="☕"
+            text="내 애플리케이션"
+            active={location.pathname === "/applications"}
+            hideTextOnMobile={true}
+          />
+          <SidebarLink
             to="/mypage"
             icon="📝"
             text="내 정보"
@@ -89,14 +96,13 @@ const Sidebar = () => {
           />
         </nav>
 
-        {/* Logout Button - Fixed at bottom */}
         <div className="p-4 border-t border-gray-100 bg-white">
           <button
             onClick={handleLogout}
             className="w-full flex items-center justify-center md:justify-start gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors group"
           >
             <span className="w-8 h-8 bg-gradient-to-br from-red-100 to-pink-100 rounded-lg flex items-center justify-center text-red-500">
-              → 
+              →
             </span>
             <span className="hidden md:block text-gray-700 font-medium group-hover:text-red-500 transition-colors">
               로그아웃

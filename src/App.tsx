@@ -17,6 +17,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import MobileProtectedRoute from "./components/MobileProtectedRoute";
 import { UserProfileProvider } from "./components/UserProfileContext";
 import Layout from "./components/home/HomeLayout";
+import ApplicationPage from "./pages/ApplicationPage";
 
 const App = () => {
   return (
@@ -74,6 +75,7 @@ const App = () => {
           <Route path="/tokens" element={<TokenInfoPage />} />
           <Route path="/security" element={<SecurityPage />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/applications" element={<ApplicationPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

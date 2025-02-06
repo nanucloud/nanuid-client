@@ -6,12 +6,11 @@ import Token from "../types/Token";
 const BASE_URL = SERVICE_API_URL.BASE_URL;
 
 export class TokenService {
-
   static async getAllTokens(page: number = 0): Promise<any> {
     const accessToken = Cookies.get("access_token");
     if (!accessToken) throw new Error("Access token not found");
   
-    const response = await fetch(`${BASE_URL}/token/getTokens?page=${page}`, {
+    const response = await fetch(`${BASE_URL}/token/getTokens?page=${page}&sort=authTime,desc`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
