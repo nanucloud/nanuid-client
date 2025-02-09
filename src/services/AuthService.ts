@@ -86,11 +86,11 @@ export class AuthService {
   private static storeTokens(tokens: AuthResponse) {
     Cookies.set("access_token", tokens.access_token, {
       secure: true,
-      expires: 1,
+      expires: 2,
     });
     Cookies.set("refresh_token", tokens.refresh_token, {
       secure: true,
-      expires: 7,
+      expires: 99999,
     });
 
     this.scheduleTokenRefresh();
