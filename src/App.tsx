@@ -18,6 +18,7 @@ import MobileProtectedRoute from "./components/MobileProtectedRoute";
 import { UserProfileProvider } from "./components/UserProfileContext";
 import Layout from "./components/home/HomeLayout";
 import ApplicationPage from "./pages/ApplicationPage";
+import OAuthLoginPage from "./pages/OAuthLoginPage";
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
         {/* 웹 인증 페이지 */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/oauth" element={<OAuthLoginPage />} />
 
         {/* 모바일 인증 페이지 */}
         <Route path="/app/login" element={<MobileLoginPage />} />

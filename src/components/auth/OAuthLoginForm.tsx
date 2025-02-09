@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import PinAuthModal from "./PinAuthModal";
 
-interface LoginFormProps {
+interface OAuthLoginFormProps {
   formData: {
     email: string;
     password: string;
@@ -19,7 +19,7 @@ interface LoginFormProps {
   onCaptchaChange: (newToken: string) => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({
+const OAuthLoginForm: React.FC<OAuthLoginFormProps> = ({
   formData,
   onInputChange,
   onAppLogin,
@@ -44,13 +44,15 @@ const LoginForm: React.FC<LoginFormProps> = ({
     <div className="flex-1 flex items-center justify-center p-6">
       <div className="w-auto min-w-[280px]">
         <h1 className="text-4xl font-bold mb-4">
-          NANU ID<br />
+          외부 서비스 <br />
           <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-purple-500 to-pink-500 font-bold text-4xl">
-            대시보드 로그인
+            OAuth 로그인
           </span>
         </h1>
         <p className="text-sm text-gray-600 mb-6">
-          대시보드에서 로그인 기록 확인 , 회원정보 관리 등을 할 수 있습니다.
+          OAuth 로그인 기록은{" "}
+          <span className="font-semibold">대시보드(id.nanu.cc)</span>에서 확인할
+          수 있습니다.
         </p>
         <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
           {error && (
@@ -80,15 +82,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <Link
-              to="https://sre.nanu.cc/nanuid/forgetpassword.html"
-              className="text-sm text-blue-600 hover:text-blue-800"
-            >
-              비밀번호를 잊으셨나요?
-            </Link>
-          </div>
-
           <div className="flex justify-between space-x-3 pt-4">
             <button
               type="button"
@@ -113,12 +106,14 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
         <div className="mt-8 text-center text-sm text-gray-600">
           계정이 없으신가요?{" "}
-          <Link
-            to="/register?from=home"
+          <a
+            href="/register?from=home"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-blue-600 hover:underline"
           >
             NANU ID 생성하기
-          </Link>
+          </a>
         </div>
 
         <PinAuthModal
@@ -132,4 +127,4 @@ const LoginForm: React.FC<LoginFormProps> = ({
   );
 };
 
-export default LoginForm;
+export default OAuthLoginForm;
