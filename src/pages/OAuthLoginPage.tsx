@@ -98,9 +98,12 @@ const OAuthLoginPage: React.FC = () => {
         authScope,
       };
 
-      await AuthService.oauthLogin(loginData);
+      const response = await AuthService.oauthLogin(loginData);
       toast.success("인증이 완료되었습니다!");
-      window.location.href = redirectUri!;
+      
+      const redirectURL = new URL(redirectUri!);
+      redirectURL.searchParams.append("code", response.code);
+      window.location.href = redirectURL.toString();
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "인증 중 오류가 발생했습니다."

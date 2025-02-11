@@ -119,7 +119,7 @@ export class AuthService {
     }
   }
 
-  static async oauthLogin(data: OAuthLoginRequest): Promise<void> {
+  static async oauthLogin(data: OAuthLoginRequest): Promise<{ code: string }> {
     const response = await fetch("https://auth.nanu.cc/auth/o/login", {
       method: "POST",
       headers: {
