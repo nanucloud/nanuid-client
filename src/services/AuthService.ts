@@ -5,6 +5,7 @@ import { LoginRequest } from "./dto/request/LoginRequest";
 import { loginRequestViaApp } from "./dto/request/LoginRequestViaApp";
 import { loginRequestViaPin } from "./dto/request/LoginRequestViaPin";
 import SERVICE_API_URL from "./ServiceEndPoint";
+import { OAuthLoginRequest } from "../types/OAuth";
 
 const BASE_URL = SERVICE_API_URL.BASE_URL;
 
@@ -116,6 +117,22 @@ export class AuthService {
     } catch {
       return null;
     }
+  }
+
+  static async oauthLogin(data: OAuthLoginRequest): Promise<void> {
+    const response = await fetch("https://auth.nanu.cc/auth/o/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("로그인에 실패했습니다.");
+    }
+
+    return response.json();
   }
 
   private static isTokenExpired(): boolean {
