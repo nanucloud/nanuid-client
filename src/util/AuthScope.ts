@@ -1,36 +1,39 @@
 import { AuthScope } from "../types/OAuth";
 
 export const parseAuthScope = (scopeStr: string): number => {
-  const scopes = scopeStr
-    .replace(/[\[\]']/g, "")
-    .split(",")
-    .map((s) => s.trim());
-  let result = 0;
+  try {
+    const cleanStr = scopeStr.replace(/[\[\]"'\s]/g, "");
+    const scopes = cleanStr.split(",");
+    let result = 0;
 
-  scopes.forEach((scope) => {
-    switch (scope.toLowerCase()) {
-      case "full":
-        result |= AuthScope.FULL_ACCESS;
-        break;
-      case "name":
-        result |= AuthScope.NAME_ACCESS;
-        break;
-      case "email":
-        result |= AuthScope.EMAIL_ACCESS;
-        break;
-      case "userid":
-        result |= AuthScope.USERID_ACCESS;
-        break;
-      case "birth":
-        result |= AuthScope.BIRTH_ACCESS;
-        break;
-    }
-  });
+    scopes.forEach((scope) => {
+      switch (scope.toUpperCase()) {
+        case "FULL":
+          result |= AuthScope.FULL_ACCESS;
+          break;
+        case "NAME":
+          result |= AuthScope.NAME_ACCESS;
+          break;
+        case "EMAIL":
+          result |= AuthScope.EMAIL_ACCESS;
+          break;
+        case "USERID":
+          result |= AuthScope.USERID_ACCESS;
+          break;
+        case "BIRTH":
+          result |= AuthScope.BIRTH_ACCESS;
+          break;
+      }
+    });
 
-  return result;
+    return result;
+  } catch (error) {
+    console.error("Error parsing auth scope:", error);
+    return 0;
+  }
 };
 
-export const getScopeNames = (scopeBits: number): string[] => {
+export const getScopeList = (scopeBits: number): string[] => {
   const scopes: string[] = [];
 
   if (scopeBits & AuthScope.FULL_ACCESS) scopes.push("전체 접근");

@@ -6,7 +6,7 @@ import OAuthPermissionDialog from "../components/auth/OAuthPermissionDialog";
 import LoginContainer from "../components/auth/LoginContainer";
 import LoginBanner from "../components/auth/LoginBanner";
 import OAuthLoginForm from "../components/auth/OAuthLoginForm";
-import { getScopeNames, parseAuthScope } from "../util/AuthScope";
+import { parseAuthScope, getScopeList } from "../util/AuthScope";
 import { AuthService } from "../services/AuthService";
 import { LoginFormData } from "../types/OAuth";
 
@@ -27,22 +27,37 @@ const OAuthLoginPage: React.FC = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
 
-  const appName = params.get("app_name");
+  const appName = params.get("app_name")?.replace(/^"|"$/g, "");
   const authScopeStr = params.get("auth_scope");
-  const redirectUri = params.get("redirect_uri");
+  const redirectUri = params.get("redirect_uri")?.replace(/^"|"$/g, "");
   const appId = params.get("app_id");
+  const authScope = params.get("auth_scope");
 
   useEffect(() => {
-    if (!appName || !authScopeStr || !redirectUri || !appId) {
-      toast.error("인증 정보가 올바르지 않습니다.");
+    if (!appName || !authScopeStr || !redirectUri || !appId || !authScope) {
+      toast.error(
+        "인증 정보(AUTH SCOPE)가 올바르지 않습니다.NANU ID 개발 문서를 확인하시기 바랍니다"
+      );
+      console.error("Missing OAuth parameters:", {
+        appName,
+        authScopeStr,
+        redirectUri,
+        appId,
+      });
       navigate(-1);
       return;
     }
-  }, [appName, authScopeStr, redirectUri, appId]);
+
+    const scopeBits = parseAuthScope(authScopeStr);
+    if (scopeBits === 0) {
+      toast.error("요청된 권한이 없습니다.");
+      navigate(-1);
+    }
+  }, [appName, authScopeStr, redirectUri, appId, navigate]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev: any) => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
@@ -62,7 +77,16 @@ const OAuthLoginPage: React.FC = () => {
         return;
       }
 
-      const authScope = parseAuthScope(authScopeStr || "");
+      if (!authScopeStr) {
+        toast.error("권한 정보가 없습니다.");
+        return;
+      }
+
+      const authScope = parseAuthScope(authScopeStr);
+      if (authScope === 0) {
+        toast.error("유효하지 않은 권한 요청입니다.");
+        return;
+      }
 
       const loginData = {
         email: formData.email,
@@ -102,7 +126,9 @@ const OAuthLoginPage: React.FC = () => {
           >
             <OAuthPermissionDialog
               serviceName={appName || "Unknown Service"}
-              permissions={getScopeNames(parseAuthScope(authScopeStr || ""))}
+              permissions={
+                authScopeStr ? getScopeList(parseAuthScope(authScopeStr)) : []
+              }
               onConfirm={handlePermissionApprove}
               isLoading={isLoading}
             />
