@@ -39,13 +39,9 @@ export const ApplicationSettingsModal: React.FC<{
   const handleUpdate = async () => {
     setLoading(true);
     try {
-      const updated = await ApplicationService.updateApplication(
-        application.applicationId,
-        { name, isPublic }
-      );
+      const updated = await ApplicationService.updateApplication(application);
       if (updated) {
-        onUpdate(updated);
-        onClose();
+        //reload page
       }
     } finally {
       setLoading(false);
@@ -56,10 +52,10 @@ export const ApplicationSettingsModal: React.FC<{
     if (!inviteEmail) return;
     setLoading(true);
     try {
-      const invited = await ApplicationService.inviteUser(
-        application.applicationId,
-        { email: inviteEmail, role: 'MEMBER' }
-      );
+      // const invited = await ApplicationService.inviteUser(
+      //   application.applicationId,
+      //   { email: inviteEmail, role: "MEMBER" }
+      // );
       //setInvitedUsers([...invitedUsers, invited]);
       setInviteEmail("");
     } finally {
@@ -68,42 +64,58 @@ export const ApplicationSettingsModal: React.FC<{
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center" onClick={onClose}>
-      <div className="bg-white rounded-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+    <div
+      className="fixed inset-0 bg-black/50 flex items-center justify-center"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="space-y-6 p-6">
           <div>
             <h2 className="text-lg font-medium mb-4">애플리케이션 설정</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">애플리케이션 이름</label>
-                <input 
+                <label className="block text-sm font-medium mb-1">
+                  애플리케이션 이름
+                </label>
+                <input
                   type="text"
-                  value={name} 
-                  onChange={e => setName(e.target.value)}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="w-full px-3 py-2 border rounded-lg"
                 />
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <label className="text-sm font-medium">공개 상태</label>
-                <button 
+                <button
                   onClick={() => setIsPublic(!isPublic)}
-                  className={`w-12 h-6 rounded-full transition-colors ${isPublic ? 'bg-blue-500' : 'bg-gray-200'}`}
+                  className={`w-12 h-6 rounded-full transition-colors ${
+                    isPublic ? "bg-blue-500" : "bg-gray-200"
+                  }`}
                 >
-                  <div className={`w-5 h-5 rounded-full bg-white transform transition-transform ${isPublic ? 'translate-x-6' : 'translate-x-1'}`} />
+                  <div
+                    className={`w-5 h-5 rounded-full bg-white transform transition-transform ${
+                      isPublic ? "translate-x-6" : "translate-x-1"
+                    }`}
+                  />
                 </button>
               </div>
 
               {!isPublic && (
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">사용자 초대</label>
+                    <label className="block text-sm font-medium mb-1">
+                      사용자 초대
+                    </label>
                     <div className="flex gap-2">
                       <input
                         type="email"
                         placeholder="이메일 주소"
                         value={inviteEmail}
-                        onChange={e => setInviteEmail(e.target.value)}
+                        onChange={(e) => setInviteEmail(e.target.value)}
                         className="flex-1 px-3 py-2 border rounded-lg"
                       />
                       <button
@@ -117,12 +129,19 @@ export const ApplicationSettingsModal: React.FC<{
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-1">초대된 사용자</label>
+                    <label className="block text-sm font-medium mb-1">
+                      초대된 사용자
+                    </label>
                     <div className="space-y-2">
-                      {invitedUsers.map(user => (
-                        <div key={user.id} className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                      {invitedUsers.map((user) => (
+                        <div
+                          key={user.id}
+                          className="flex justify-between items-center p-2 bg-gray-50 rounded"
+                        >
                           <span>{user.email}</span>
-                          <span className="text-sm text-gray-500">{user.status}</span>
+                          <span className="text-sm text-gray-500">
+                            {user.status}
+                          </span>
                         </div>
                       ))}
                     </div>
