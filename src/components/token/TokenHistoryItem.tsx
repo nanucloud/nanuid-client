@@ -98,7 +98,7 @@ const TokenHistoryItem: React.FC<TokenHistoryItemProps> = ({ token, onDelete, on
               </h3>
               <p className="text-sm text-gray-500">
                 {actionType === 'delete' 
-                  ? `정말로 ${token.applicationId} 토큰을 삭제하시겠어요?`
+                  ? `정말로 ${token.applicationName}에 발급된 이 토큰을 삭제하시겠어요?`
                   : `이 IP 주소(${token.ip})를 차단하시겠어요?`}
               </p>
             </div>
