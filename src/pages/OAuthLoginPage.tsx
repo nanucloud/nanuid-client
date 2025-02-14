@@ -9,6 +9,7 @@ import OAuthLoginForm from "../components/auth/OAuthLoginForm";
 import { parseAuthScope, getScopeList } from "../util/AuthScope";
 import { AuthService } from "../services/AuthService";
 import { LoginFormData } from "../types/OAuth";
+import { DeviceType } from "../types/DeviceType";
 
 const OAuthLoginPage: React.FC = () => {
   const [formData, setFormData] = useState<LoginFormData>({
@@ -96,11 +97,12 @@ const OAuthLoginPage: React.FC = () => {
         applicationId: appId!,
         applicationRedirectUri: redirectUri!,
         authScope,
+        deviceType: getDeviceType(),
       };
 
       const response = await AuthService.oauthLogin(loginData);
       toast.success("인증이 완료되었습니다!");
-      
+
       const redirectURL = new URL(redirectUri!);
       redirectURL.searchParams.append("code", response.code);
       window.location.href = redirectURL.toString();
@@ -111,6 +113,22 @@ const OAuthLoginPage: React.FC = () => {
       toast.error("인증에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const getDeviceType = (): DeviceType => {
+    const userAgent = navigator.userAgent;
+
+    if (/Android/i.test(userAgent)) {
+      return DeviceType.ANDROID;
+    } else if (/iPhone|iPad|iPod/i.test(userAgent)) {
+      return DeviceType.IOS;
+    } else if (/Windows NT/i.test(userAgent)) {
+      return DeviceType.WINDOWS;
+    } else if (/Macintosh/i.test(userAgent)) {
+      return DeviceType.MAC;
+    } else {
+      return DeviceType.WEB_UNKNOWN;
     }
   };
 

@@ -1,3 +1,5 @@
+import { DeviceType } from "./DeviceType";
+
 export enum AuthScope {
   FULL_ACCESS = 1 << 0,
   NAME_ACCESS = 1 << 1,
@@ -20,4 +22,5 @@ export interface OAuthLoginRequest {
   applicationId: string;
   applicationRedirectUri: string;
   authScope: number;
+  deviceType: DeviceType
 }
