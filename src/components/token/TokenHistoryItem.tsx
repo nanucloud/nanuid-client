@@ -1,25 +1,20 @@
 import React, { useState } from 'react';
-import { Shield, Trash2, Globe, Clock, Monitor } from 'lucide-react';
-import { FaApple, FaAndroid, FaLaptop, FaWindows } from 'react-icons/fa';  // Windows 아이콘 추가
+import { Shield, Trash2, Globe, Clock, Monitor, Info } from 'lucide-react';
+import { FaApple, FaAndroid, FaLaptop, FaWindows } from 'react-icons/fa';
 import Token from '../../types/Token';
 
 interface TokenHistoryItemProps {
   token: Token;
   onDelete: (id: string) => void;
-  onBlockIP: (ip: string) => void;
+  onViewDetails: (tokenId: string) => void;
 }
 
-const TokenHistoryItem: React.FC<TokenHistoryItemProps> = ({ token, onDelete, onBlockIP }) => {
-  const [showModal, setShowModal] = useState(false);
-  const [actionType, setActionType] = useState<'delete' | 'block'>('delete');
+const TokenHistoryItem: React.FC<TokenHistoryItemProps> = ({ token, onDelete, onViewDetails }) => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const handleAction = () => {
-    if (actionType === 'delete') {
-      onDelete(token.refreshTokenId);
-    } else {
-      onBlockIP(token.ip);
-    }
-    setShowModal(false);
+  const handleDelete = () => {
+    onDelete(token.refreshTokenId);
+    setShowDeleteModal(false);
   };
 
   const getDeviceIcon = (deviceType: string) => {
@@ -74,44 +69,42 @@ const TokenHistoryItem: React.FC<TokenHistoryItemProps> = ({ token, onDelete, on
       {/* 액션 버튼 */}
       <div className="flex gap-2 border-t pt-4">
         <button
-          onClick={() => { setActionType('delete'); setShowModal(true); }}
+          onClick={() => setShowDeleteModal(true)}
           className="flex-1 flex items-center justify-center gap-2 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
         >
           <Trash2 size={16} />
           <span className="text-sm">삭제하기</span>
         </button>
         <button
-          onClick={() => { setActionType('block'); setShowModal(true); }}
-          className="flex-1 flex items-center justify-center gap-2 py-2 bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+          onClick={() => onViewDetails(token.refreshTokenId)}
+          className="flex-1 flex items-center justify-center gap-2 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
         >
-          <Shield size={16} />
-          <span className="text-sm">IP 차단</span>
+          <Info size={16} />
+          <span className="text-sm">상세정보</span>
         </button>
       </div>
 
-      {showModal && (
+      {showDeleteModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md">
             <div className="mb-5">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                {actionType === 'delete' ? '토큰 삭제' : 'IP 차단'}
+                토큰 삭제
               </h3>
               <p className="text-sm text-gray-500">
-                {actionType === 'delete' 
-                  ? `정말로 ${token.applicationName}에 발급된 이 토큰을 삭제하시겠어요?`
-                  : `이 IP 주소(${token.ip})를 차단하시겠어요?`}
+                정말로 {token.applicationName}에 발급된 이 토큰을 삭제하시겠어요?
               </p>
             </div>
             
             <div className="flex gap-2">
               <button
-                onClick={() => setShowModal(false)}
+                onClick={() => setShowDeleteModal(false)}
                 className="flex-1 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
               >
                 취소
               </button>
               <button
-                onClick={handleAction}
+                onClick={handleDelete}
                 className="flex-1 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
               >
                 확인

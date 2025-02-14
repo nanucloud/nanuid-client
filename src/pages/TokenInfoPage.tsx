@@ -5,12 +5,14 @@ import { getLocationByIP } from "../services/IpLocationService";
 import Token from "../types/Token";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { useNavigate } from "react-router-dom";
 
 const TokenInfoPage: React.FC = () => {
   const [tokens, setTokens] = useState<Token[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const fetchLocationForTokens = async (tokens: Token[]) => {
     const updatedTokens = await Promise.all(
@@ -53,12 +55,8 @@ const TokenInfoPage: React.FC = () => {
     }
   };
 
-  const handleBlockIP = async (ip: string) => {
-    try {
-      await TokenService.blockIP(ip);
-    } catch (error) {
-      console.error("IP 차단 실패", error);
-    }
+  const handleViewDetails = (tokenId: string) => {
+    navigate(`/tokens/${tokenId}`);
   };
 
   const renderPagination = () => {
@@ -147,7 +145,7 @@ const TokenInfoPage: React.FC = () => {
           <TokenHistoryList
             tokens={tokens}
             onDelete={handleDeleteToken}
-            onBlockIP={handleBlockIP}
+            onViewDetails={handleViewDetails}
           />
           {totalPages > 1 && renderPagination()}
         </>
@@ -155,5 +153,4 @@ const TokenInfoPage: React.FC = () => {
     </div>
   );
 };
-
 export default TokenInfoPage;
