@@ -4,8 +4,8 @@ export interface LoginHistory {
   date: string;
   service: string;
   device: string;
+  tokenId: string;
 }
-
 export interface Status {
   title: string;
   subtitle: string;
@@ -20,6 +20,7 @@ export class HomeService {
         date: token.authTime,
         service: token.applicationName,
         device: token.deviceType,
+        tokenId: token.refreshTokenId
       }));
     } catch (error) {
       console.error("로그인 기록 조회 실패", error);

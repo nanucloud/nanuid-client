@@ -26,7 +26,7 @@ const HomePage: React.FC = () => {
       try {
         const [statusData, historyData] = await Promise.all([
           HomeService.getStatusList(),
-          HomeService.getLoginHistory()
+          HomeService.getLoginHistory(),
         ]);
 
         if (isMounted) {
@@ -41,7 +41,9 @@ const HomePage: React.FC = () => {
     }
 
     fetchData();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [userProfile]);
 
   if (!userProfile) return null;
@@ -77,7 +79,9 @@ const HomePage: React.FC = () => {
           <div className="bg-white rounded-2xl p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-medium">로그인 기록</h3>
-              <button className="text-blue-500 hover:underline">전체 기록</button>
+              <button className="text-blue-500 hover:underline">
+                전체 기록
+              </button>
             </div>
 
             {loginHistory.map((history, index) => (
@@ -86,7 +90,7 @@ const HomePage: React.FC = () => {
                 date={history.date}
                 service={history.service}
                 device={history.device}
-                onClick={() => console.log(`로그인 기록 클릭됨: ${history.service}`)}
+                tokenId={history.tokenId}
               />
             ))}
           </div>
