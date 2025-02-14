@@ -22,7 +22,7 @@ const LoginHistoryItem: React.FC<LoginHistoryItemProps> = ({
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-6 mb-4 transition-all duration-200 hover:shadow-md">
+    <div className="bg-white border border-gray-200 rounded-xl p-6 mb-4 transition-all duration-200">
       <div className="flex justify-between items-start gap-4">
         <div className="flex-1 space-y-3">
           <div className="flex items-center gap-2 text-gray-500">
