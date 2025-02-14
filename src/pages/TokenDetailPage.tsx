@@ -83,7 +83,6 @@ const TokenDetailPage: React.FC = () => {
 
   return (
     <div className="max-w-3xl">
-      {/* 헤더 */}
       <div className="mb-8">
         <button
           onClick={() => navigate("/tokens")}
@@ -95,7 +94,6 @@ const TokenDetailPage: React.FC = () => {
         <h1 className="text-3xl font-bold text-gray-900">토큰 상세 정보</h1>
       </div>
 
-      {/* 메인 카드 */}
       <div className="bg-white rounded-xl shadow-toss p-6 mb-6">
         <div className="flex items-center gap-4 mb-6">
           <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
@@ -109,7 +107,6 @@ const TokenDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* 상세 정보 그리드 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <InfoItem
             icon={<Hash className="text-blue-500" />}
@@ -144,7 +141,6 @@ const TokenDetailPage: React.FC = () => {
         </div>
       </div>
 
-      {/* 추가 정보 또는 액션 버튼 */}
       <div className="bg-white rounded-xl shadow-toss p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">토큰 관리</h3>
         <button
