@@ -60,7 +60,7 @@ export class TokenService {
     const accessToken = Cookies.get("access_token");
     if (!accessToken) throw new Error("Access token not found");
 
-    const response = await fetch(`${BASE_URL}/auth/delete-token/${tokenId}`, {
+    const response = await fetch(`${BASE_URL}/token/delete/${tokenId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${accessToken}`,
