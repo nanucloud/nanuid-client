@@ -66,8 +66,8 @@ const TokenDetailPage: React.FC = () => {
 
   if (error || !token) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-8">
-        <div className="bg-red-50 text-red-600 p-4 rounded-lg">
+      <div className="max-w-3xl mx-auto">
+        <div className="bg-red-50 text-red-600 rounded-lg">
           <p>{error || "토큰을 찾을 수 없습니다."}</p>
           <button
             onClick={() => navigate("/tokens")}
@@ -82,7 +82,7 @@ const TokenDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-3xl">
       {/* 헤더 */}
       <div className="mb-8">
         <button

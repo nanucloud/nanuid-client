@@ -19,6 +19,7 @@ import { UserProfileProvider } from "./components/UserProfileContext";
 import Layout from "./components/home/HomeLayout";
 import ApplicationPage from "./pages/ApplicationPage";
 import OAuthLoginPage from "./pages/OAuthLoginPage";
+import TokenDetailPage from "./pages/TokenDetailPage";
 
 const App = () => {
   return (
@@ -75,6 +76,7 @@ const App = () => {
         >
           <Route path="/home" element={<HomePage />} />
           <Route path="/tokens" element={<TokenInfoPage />} />
+          <Route path="/tokens/:tokenId" element={<TokenDetailPage />} />
           <Route path="/security" element={<SecurityPage />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/applications" element={<ApplicationPage />} />
