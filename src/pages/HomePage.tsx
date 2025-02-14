@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { HomeService, LoginHistory, Status } from "../services/HomeService";
 import StatusCard from "../components/home/StatusCard";
 import LoginHistoryItem from "../components/home/LoginHistoryItem";
@@ -9,6 +9,7 @@ import { useUserProfile } from "../components/UserProfileContext";
 
 const HomePage: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { userProfile } = useUserProfile();
   const [statusList, setStatusList] = useState<Status[]>([]);
   const [loginHistory, setLoginHistory] = useState<LoginHistory[]>([]);
@@ -46,6 +47,10 @@ const HomePage: React.FC = () => {
     };
   }, [userProfile]);
 
+  const handleViewAllHistory = () => {
+    navigate('/tokens');
+  };
+
   if (!userProfile) return null;
 
   return (
@@ -79,7 +84,10 @@ const HomePage: React.FC = () => {
           <div className="bg-white rounded-2xl p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-medium">로그인 기록</h3>
-              <button className="text-blue-500 hover:underline">
+              <button 
+                onClick={handleViewAllHistory}
+                className="text-blue-500 hover:underline focus:outline-none focus:text-blue-700"
+              >
                 전체 기록
               </button>
             </div>
